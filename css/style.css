@@ -9,12 +9,14 @@ font-family: 'IBM Plex Sans', sans-serif;
 font-size: 16px;
 font-weight: 300;
 line-height: 1.5;
- -webkit-text-size-adjust: 100%;
+-webkit-text-size-adjust: 100%;
 
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    word-wrap:break-word
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+word-wrap:break-word
 }
+
 body {
-    margin:10%
+margin:10%;
+background-color: rbga(0,0,0,0.5);
 }
