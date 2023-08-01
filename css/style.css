@@ -1,4 +1,455 @@
+.quattrocento-sans {
+    font-family: 'Quattrocento Sans', sans-serif
+}
+
+.quattrocento {
+    font-family: 'Quattrocento', serif
+}
+
+.barlow {
+    font-family: 'Barlow', sans-serif
+}
+
+.open-sans {
+    font-family: 'Open Sans', sans-serif
+}
+
+.montserrat {
+    font-family: 'Montserrat', sans-serif
+}
+
+.source-code-pro {
+    font-family: 'Source Code Pro', monospace
+}
+
+.pt-sans {
+    font-family: 'PT Sans', sans-serif
+}
+
+.pt-serif {
+    font-family: 'PT Serif', serif
+}
+
+.roboto {
+    font-family: 'Roboto', sans-serif
+}
+
+.roboto-condensed {
+    font-family: 'Roboto Condensed', sans-serif
+}
+
+.ubuntu {
+    font-family: 'Ubuntu', sans-serif
+}
+
+.playfair-display {
+    font-family: 'Playfair Display', serif
+}
+
+.noto-sans {
+    font-family: 'Noto Sans', sans-serif
+}
+
+.noto-serif {
+    font-family: 'Noto Serif', serif
+}
+
+.montserrat {
+    font-family: 'Montserrat', sans-serif
+}
+
+.raleway {
+    font-family: 'Raleway', sans-serif
+}
+
+.poppins {
+    font-family: 'Poppins', sans-serif
+}
+
+.fira-sans {
+    font-family: 'Fira Sans', sans-serif
+}
+
+.exo-2 {
+    font-family: 'Exo 2', sans-serif
+}
+
+.libre-frankin {
+    font-family: 'Libre Franklin', sans-serif
+}
+
+.exo {
+    font-family: 'Exo', sans-serif
+}
+
+.kanit {
+    font-family: 'Kanit', sans-serif
+}
+
+.prompt {
+    font-family: 'Prompt', sans-serif
+}
+
+.fira-sans-condensed {
+    font-family: 'Fira Sans Condensed', sans-serif
+}
+
+.barlow-condensed {
+    font-family: 'Barlow Condensed', sans-serif
+}
+
+.fira-sans-extra-condensed {
+    font-family: 'Fira Sans Extra Condensed', sans-serif
+}
+
+.montserrat-alternates {
+    font-family: 'Montserrat Alternates', sans-serif
+}
+
+.barlow-semi-condensed {
+    font-family: 'Barlow Semi Condensed', sans-serif
+}
+
+.taviraj {
+    font-family: 'Taviraj', serif
+}
+
+.trirong {
+    font-family: 'Trirong', serif
+}
+
+.overpass {
+    font-family: 'Overpass', sans-serif
+}
+
+.muli {
+    font-family: 'Muli', sans-serif
+}
+
+.nunito {
+    font-family: 'Nunito', sans-serif
+}
+
+.nunito-sans {
+    font-family: 'Nunito Sans', sans-serif
+}
+
+.ibm-plex-sans {
+    font-family: 'IBM Plex Sans', sans-serif
+}
+
+.ibm-plex-serif {
+    font-family: 'IBM Plex Serif', serif
+}
+
+.ibm-plex-mono {
+    font-family: 'IBM Plex Mono', monospace
+}
+
+.ibm-plex-sans-condensed {
+    font-family: 'IBM Plex Sans Condensed', sans-serif
+}
+
+.alegreya-sans {
+    font-family: 'Alegreya Sans', sans-serif
+}
+
+.alegreya-sans-sc {
+    font-family: 'Alegreya Sans SC', sans-serif
+}
+
+.spectral {
+    font-family: 'Spectral', serif
+}
+
+.spectral-sc {
+    font-family: 'Spectral SC', serif
+}
+
+.sunflower {
+    font-family: 'Sunflower', sans-serif
+}
+
+.lato {
+    font-family: 'Lato', sans-serif
+}
+
+.oswald {
+    font-family: 'Oswald', sans-serif
+}
+
+.lora {
+    font-family: 'Lora', serif
+}
+
+.arimo {
+    font-family: 'Arimo', sans-serif
+}
+
+.dosis {
+    font-family: 'Dosis', sans-serif
+}
+
+.josefin-sans {
+    font-family: 'Josefin Sans', sans-serif
+}
+
+.cabin {
+    font-family: 'Cabin', sans-serif
+}
+
+.quicksand {
+    font-family: 'Quicksand', sans-serif
+}
+
+.rubik {
+    font-family: 'Rubik', sans-serif
+}
+
+.karla {
+    font-family: 'Karla', sans-serif
+}
+
+.vollkorn {
+    font-family: 'Vollkorn', serif
+}
+
+.catamaran {
+    font-family: 'Catamaran', sans-serif
+}
+
+.alegreya {
+    font-family: 'Alegreya', serif
+}
+
+.source-sans-pro {
+    font-family: 'Source Sans Pro', sans-serif
+}
+
+.merriweather {
+    font-family: 'Merriweather', serif
+}
+
+.roboto-slab {
+    font-family: 'Roboto Slab', serif
+}
+
+.open-sans-condensed {
+    font-family: 'Open Sans Condensed', sans-serif
+}
+
+.eczar {
+    font-family: 'Eczar', serif
+}
+
+.roboto-mono {
+    font-family: 'Roboto Mono', monospace
+}
+
+.titillium-web {
+    font-family: 'Titillium Web', sans-serif
+}
+
+.pt-sans-narrow {
+    font-family: 'PT Sans Narrow', sans-serif
+}
+
+.inconsolata {
+    font-family: 'Inconsolata', monospace
+}
+
+.nanum-gothic {
+    font-family: 'Nanum Gothic', sans-serif
+}
+
+.work-sans {
+    font-family: 'Work Sans', sans-serif
+}
+
+.crimson-text {
+    font-family: 'Crimson Text', serif
+}
+
+.bitter {
+    font-family: 'Bitter', serif
+}
+
+.oxygen {
+    font-family: 'Oxygen', sans-serif
+}
+
+.anton {
+    font-family: 'Anton', sans-serif
+}
+
+.libre-baskerville {
+    font-family: 'Libre Baskerville', serif
+}
+
+.headland-one {
+    font-family: 'Headland One', serif
+}
+
+.fjalla-one {
+    font-family: 'Fjalla One', sans-serif
+}
+
+.hind {
+    font-family: 'Hind', sans-serif
+}
+
+.arvo {
+    font-family: 'Arvo', serif
+}
+
+.abel {
+    font-family: 'Abel', sans-serif
+}
+
+.yanone-kaffeesatz {
+    font-family: 'Yanone Kaffeesatz', sans-serif
+}
+
+.varela-round {
+    font-family: 'Varela Round', sans-serif
+}
+
+.merriweather-sans {
+    font-family: 'Merriweather Sans', sans-serif
+}
+
+.ubuntu-condensed {
+    font-family: 'Ubuntu Condensed', sans-serif
+}
+
+.asap {
+    font-family: 'Asap', sans-serif
+}
+
+.bree-serif {
+    font-family: 'Bree Serif', serif
+}
+
+.source-serif-pro {
+    font-family: 'Source Serif Pro', serif
+}
+
+.abril-fatface {
+    font-family: 'Abril Fatface', cursive
+}
+
+.acme {
+    font-family: 'Acme', sans-serif
+}
+
+.archivo-narrow {
+    font-family: 'Archivo Narrow', sans-serif
+}
+
+.questrial {
+    font-family: 'Questrial', sans-serif
+}
+
+.hind-siliguri {
+    font-family: 'Hind Siliguri', sans-serif
+}
+
+.signika {
+    font-family: 'Signika', sans-serif
+}
+
+.play {
+    font-family: 'Play', sans-serif
+}
+
+.comfortaa {
+    font-family: 'Comfortaa', cursive
+}
+
+.maven-pro {
+    font-family: 'Maven Pro', sans-serif
+}
+
+.francois-one {
+    font-family: 'Francois One', sans-serif
+}
+
+.eb-garamond {
+    font-family: 'EB Garamond', serif
+}
+
+.cairo {
+    font-family: 'Cairo', sans-serif
+}
+
+.palanquin-dark {
+    font-family: 'Palanquin Dark', sans-serif
+}
+
+.teko {
+    font-family: 'Teko', sans-serif
+}
+
+.righteous {
+    font-family: 'Righteous', cursive
+}
+
+.crete-round {
+    font-family: 'Crete Round', serif
+}
+
+.encode-sans-condensed {
+    font-family: 'Encode Sans Condensed', sans-serif
+}
+
+.pt-sans-caption {
+    font-family: 'PT Sans Caption', sans-serif
+}
+
+.patua-one {
+    font-family: 'Patua One', cursive
+}
+
+.ropa-sans {
+    font-family: 'Ropa Sans', sans-serif
+}
+
+.rajdhani {
+    font-family: 'Rajdhani', sans-serif
+}
+
+.cinzel {
+    font-family: 'Cinzel', serif
+}
+
+.heebo {
+    font-family: 'Heebo', sans-serif
+}
+
+.cuprum {
+    font-family: 'Cuprum', sans-serif
+}
+
+.rokkitt {
+    font-family: 'Rokkitt', serif
+}
+
+
+
 html {
+
 	background-color: black;
-	font-color:grey;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    background: #fff;
+    color: #666;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-wrap:break-word
+}
+body {
+    margin:0
 }
