@@ -21,7 +21,7 @@ margin:10%;
 background-color: rbga(0,0,0,0.5);
 }
 .content {
-background-color: rbg(0,0,0,0.85);
+background-color: rgb(255,255,255,0.85);
 border: 30px solid #007B5F;
 padding:2%;
 margin:5% auto 5% auto;
