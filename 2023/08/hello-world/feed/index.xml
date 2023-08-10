@@ -8,7 +8,11 @@
 <channel>
 	<title>
 	Comments on: Hello world!	</title>
+<<<<<<< HEAD
 	<atom:link href="https://wordpresslocal/2023/08/hello-world/feed/?simply_static_page=243" rel="self" type="application/rss+xml" />
+=======
+	<atom:link href="https://wordpresslocal/2023/08/hello-world/feed/?simply_static_page=219" rel="self" type="application/rss+xml" />
+>>>>>>> 59c93fc00a48f46cd59138dda562bdd55f3c81e3
 	<link>./../index.html</link>
 	<description></description>
 	<lastBuildDate>Thu, 10 Aug 2023 11:38:27 +0000</lastBuildDate>
