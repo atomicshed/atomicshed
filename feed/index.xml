@@ -8,11 +8,11 @@
 	>
 
 <channel>
-	<title>My Great Blog</title>
-	<atom:link href="https://wordpresslocal/feed/?simply_static_page=229" rel="self" type="application/rss+xml" />
+	<title>twisler</title>
+	<atom:link href="https://wordpresslocal/feed/?simply_static_page=253" rel="self" type="application/rss+xml" />
 	<link>./../index.html</link>
 	<description></description>
-	<lastBuildDate>Thu, 10 Aug 2023 11:38:27 +0000</lastBuildDate>
+	<lastBuildDate>Thu, 10 Aug 2023 16:44:41 +0000</lastBuildDate>
 	<language>en-US</language>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
@@ -20,7 +20,7 @@
 	1	</sy:updateFrequency>
 	<generator>https://wordpress.org/?v=6.3</generator>
 	<item>
-		<title>Hello world!</title>
+		<title></title>
 		<link>./../2023/08/hello-world/index.html</link>
 					<comments>./../2023/08/hello-world/index.html#comments</comments>
 		
@@ -29,9 +29,9 @@
 				<category><![CDATA[Uncategorized]]></category>
 		<guid isPermaLink="false">./../index.html?p=1</guid>
 
-					<description><![CDATA[Welcome to WordPress. This is your first post. Edit or delete it, then start writing!]]></description>
+					<description><![CDATA[Hello, I&#8217;m John Cooper.I am a freelance graphic designer specialising in digital media and presentation design for events &#8211; big corporate shows for fashion, the automobile industry, pharma and those giant tech companies.&#160;I hope that at some point soon I will be able to&#160;show some&#160;work here. In the meantime it&#8217;s probably best to drop me [&#8230;]]]></description>
 										<content:encoded><![CDATA[
-<p>Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p>
+<h2 class="wp-block-heading"><strong>Hello, I&#8217;m John Cooper.</strong><br>I am a freelance graphic designer specialising in digital media and presentation design for events &#8211; big corporate shows for fashion, the automobile industry, pharma and those giant tech companies.&nbsp;I hope that at some point soon I will be able to&nbsp;<a href="http://atomicshed.com/wheres-all-the-work">show some</a>&nbsp;work here. In the meantime it&#8217;s probably best to drop me an&nbsp;<a href="mailto:john@atomicshed.com">email</a>&nbsp;or a&nbsp;<a href="http://atomicshed.com/#footer">call</a>&nbsp;to discuss how I maybe able to help you.</h2>
 ]]></content:encoded>
 					
 					<wfw:commentRss>./../2023/08/hello-world/feed/index.html</wfw:commentRss>
