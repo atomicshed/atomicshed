@@ -14,20 +14,47 @@
         padding: 0;
         background-color: #ececec;
         color: #121212;
+ 	 	font-family: Arial, sans-serif;
       }
+      nav {
+        padding:10px;
+        }
+		nav a:link, nav a:visited { 
+		  color: /* browser's internal value */;
+		  text-decoration: none;
+		  cursor: auto;
+		  padding:30px;  
+		  font-size:1.5em;
+		}
+		 a:hover {
+		  text-decoration: underline;
+		  color:red;
+		}
+		h2 a:hover {
+		  text-decoration: none;
+		  }
+
+		nav a:link:active, nav a:visited:active { 
+		  color: /* browser's internal value */;
+		}
       h2 , footer {
-      	padding:30px; 
-      	font-family: arial;
+      	padding:30px;  
       	font-size:3.5em;
       	}
       footer {
       	font-size: 0.85em;
       	color: #ababab;
       	}
+      #xmas {
+      padding: 30px;
+      	}
     </style>
   </head>
 
 <body>
+	<nav>
+		<a href="#xmas">Seasons greatings</a>
+	</nav>
   <div style="height: 300vh;">
     <div id="scrolly-video"></div>
   </div>
@@ -50,7 +77,7 @@
   <h2> 
           I hope that at some point soon I will be able to show some work here. In the meantime it’s probably best to drop me an <a href="mailto:john@atomicshed.com">email</a> or a call to discuss how I maybe able to help you.
    </h2>
-    
+  <div id="xmas">  
    <script type="text/javascript">//<![CDATA[
 
 
@@ -79,13 +106,13 @@ function getRandomImage(imgAr, path) {
     path = path || 'xmas/'; // default path here
     var num = Math.floor( Math.random() * imgAr.length );
     var img = imgAr[ num ];
-    var imgStr = '<img src="' + path + img + '" alt = " Generated using Adobe Firefly " width="100%">';
+    var imgStr = '<a href="' + path + img +'"><img src="' + path + img + '" alt = " Generated using Adobe Firefly " width="100%"></a>';
     document.write(imgStr); document.close();
 }
 
 
   //]]></script> 
-     
+</div>     
    <footer> © 2023 - John Cooper - Atomicshed </footer>
 
 </body>
