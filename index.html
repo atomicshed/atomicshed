@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ScrollyVideo HTML Demo</title>
+    <title>atomicshed 1</title>
     
 
 
@@ -50,11 +50,43 @@
   <h2> 
           I hope that at some point soon I will be able to show some work here. In the meantime it’s probably best to drop me an <a href="mailto:john@atomicshed.com">email</a> or a call to discuss how I maybe able to help you.
    </h2>
+    
+   <script type="text/javascript">//<![CDATA[
+
+
+var arrayImg = new Array(); 
+arrayImg[0] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_gold_drips_.jpg";
+arrayImg[1] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_79003.jpg";
+arrayImg[2] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_30316.jpg";
+arrayImg[3] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_57876.jpg";
+arrayImg[4] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_31204.jpg";
+arrayImg[5] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_24493.jpg";
+arrayImg[6] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_84579.jpg";
+arrayImg[7] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_17987-2.jpg";
+arrayImg[8] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_17987.jpg";
+arrayImg[9] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fire_84579.jpg";
+arrayImg[10] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fire_17987.jpg";
+arrayImg[11] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fire_38616.jpg";
+arrayImg[12] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fire_32193.jpg";
+arrayImg[13] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fire_68031.jpg";
+arrayImg[14] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_32193.jpg";
+arrayImg[15] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_68031.jpg";
+arrayImg[16] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_28997.jpg";
+
+getRandomImage(arrayImg, "");
+
+function getRandomImage(imgAr, path) {
+    path = path || 'xmas/'; // default path here
+    var num = Math.floor( Math.random() * imgAr.length );
+    var img = imgAr[ num ];
+    var imgStr = '<img src="' + path + img + '" alt = "Generated using Adobe Firefly" width="100%">';
+    document.write(imgStr); document.close();
+}
+
+
+  //]]></script> 
+     
    <footer> © 2023 - John Cooper - Atomicshed </footer>
-    
-   
-   
-    
 
 </body>
 </html>
