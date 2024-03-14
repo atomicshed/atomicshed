@@ -81,15 +81,15 @@
 
 
 var arrayImg = new Array(); 
-arrayImg[0] = "Firefly_happy_blooming_Christmas_the_AI_takes_over_the_world_fires_engulf_the_picture_g old_drips_.jpg";
+arrayImg[0] = "logo-atomicshed.png";
 
 getRandomImage(arrayImg, "");
 
 function getRandomImage(imgAr, path) {
-    path = path || 'xmas/'; // default path here
+    path = path || 'wp-content/uploads/2023/08/'; // default path here
     var num = Math.floor( Math.random() * imgAr.length );
     var img = imgAr[ num ];
-    var imgStr = '<a href="' + path + img +'"><img src="' + path + img + '" alt = " Generated using Adobe Firefly " width="100%"></a>';
+    var imgStr = '<a href="' + path + img +'"><img src="' + path + img + '" alt = "John Cooper : ATOMICSHED" width="100%"></a>';
     document.write(imgStr); document.close();
 }
 
