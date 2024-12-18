@@ -1,0 +1,5 @@
+﻿{
+  "Description": "Domain ownership verification file for Microsoft 365 - place in the website root",
+  "Domain": "atomicshed.com",
+  "Id": "17e60648-c41c-4b83-b517-745838f8cf3d"
+}
