@@ -43,14 +43,18 @@ files
 
     const imageURL = `${location.origin}/${path ? path + "/" : ""}${encodeURIComponent(f.name)}`;
 
+    // Remove everything up to and including the first "_"
+    // Then remove the file extension
+    const displayName = f.name
+      .replace(/^[^_]*_/, "")
+      .replace(/\.[^.]+$/, "");
+
     gallery.insertAdjacentHTML("beforeend", `
       <div>
         <a href="${imageURL}" target="_blank" rel="noopener">
-          <img src="${imageURL}" alt="${f.name}">
+          <img src="${imageURL}" alt="${displayName}">
         </a>
-        <div class="name">
-          <a href="${imageURL}" target="_blank" rel="noopener">${f.name}</a>
-        </div>
+        <div class="name">${displayName}</div>
       </div>
     `);
   });
