@@ -36,28 +36,20 @@ fetch(api)
       gallery.innerHTML = `<pre>${JSON.stringify(files, null, 2)}</pre>`;
       return;
     }
-
-//     files
-//       .filter(f => /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name))
-//       .forEach(f => {
-//         gallery.insertAdjacentHTML("beforeend", `
-//           <div>
-//             <img src="${f.download_url}" alt="${f.name}">
-//             <div class="name">${f.name}</div>
-//           </div>
-//         `);
-//       });
       
-	files
+files
   .filter(f => /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name))
   .forEach(f => {
+
+    const imageURL = `${location.origin}/${path ? path + "/" : ""}${encodeURIComponent(f.name)}`;
+
     gallery.insertAdjacentHTML("beforeend", `
       <div>
-        <a href="${f.download_url}" target="_blank" rel="noopener">
-          <img src="${f.download_url}" alt="${f.name}">
+        <a href="${imageURL}" target="_blank" rel="noopener">
+          <img src="${imageURL}" alt="${f.name}">
         </a>
         <div class="name">
-          <a href="${f.download_url}" target="_blank" rel="noopener">${f.name}</a>
+          <a href="${imageURL}" target="_blank" rel="noopener">${f.name}</a>
         </div>
       </div>
     `);
