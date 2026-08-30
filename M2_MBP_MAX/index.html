@@ -2,72 +2,74 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Image Gallery</title>
 
 <style>
 body{
-    font-family: Arial, sans-serif;
-    margin:20px;
-    background:#f5f5f5;
+  font-family:Arial,sans-serif;
+  margin:20px;
+  background:#f5f5f5;
 }
 .gallery{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:15px;
-}
-.item{
-    background:white;
-    padding:10px;
-    border-radius:8px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:15px;
 }
 img{
-    width:100%;
-    height:150px;
-    object-fit:cover;
-    display:block;
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:8px;
 }
 .name{
-    margin-top:8px;
-    font-size:12px;
-    word-break:break-word;
+  font-size:12px;
+  margin-top:6px;
+  word-break:break-word;
 }
 </style>
 </head>
 <body>
 
-<h3>Macbook Pro Max, M2</h3>
+<h1>Images</h1>
 <div id="gallery" class="gallery"></div>
 
 <script>
 const USER = "atomicshed";
 const REPO = "atomicshed";
 
-// Works out which folder this page is in
-const path = location.pathname
-  .replace(/^\/[^/]+\//, "")      // remove repo name
-  .replace(/index\.html$/, "")
-  .replace(/\/$/, "");
+// Work out the folder this page lives in.
+let path = location.pathname.replace(/\/index\.html$/, "").replace(/^\//,"");
+
+// Remove repo name if this is a project page
+if (path.startsWith(REPO + "/")) {
+  path = path.slice(REPO.length + 1);
+}
 
 const api = `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
-fetch(api)
-  .then(r => r.json())
-  .then(files => {
-    const gallery = document.getElementById("gallery");
+console.log("API:", api);
 
-    files
-      .filter(f => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))
-      .forEach(f => {
-        gallery.insertAdjacentHTML("beforeend", `
-          <div class="item">
-            <img src="${f.download_url}" alt="${f.name}">
-            <div class="name">${f.name}</div>
-          </div>
-        `);
-      });
-  })
-  .catch(console.error);
+fetch(api)
+.then(r => r.json())
+.then(files => {
+  const gallery = document.getElementById("gallery");
+
+  if (!Array.isArray(files)) {
+    gallery.innerHTML = `<p>GitHub API returned an error.</p><pre>${JSON.stringify(files,null,2)}</pre>`;
+    return;
+  }
+
+  files
+    .filter(f => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))
+    .forEach(f => {
+      gallery.innerHTML += `
+        <div>
+          <img src="${f.download_url}" alt="${f.name}">
+          <div class="name">${f.name}</div>
+        </div>`;
+    });
+});
 </script>
 
 </body>
