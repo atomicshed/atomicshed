@@ -1,10 +1,36 @@
 <!doctype html>
-<link rel=stylesheet href=/style.css>
-<header>
-<a class=logo href='/'><img src='/images/atomicshed.svg'></a>
-</header>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>atomicshed : John Cooper</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
 <div id=agencies>
 </div>
 <script>fetch('agencies.json').then(r=>r.json()).then(a=>agencies.innerHTML=a.map(x=>`<p>
 <a href="${x.folder}/">${x.name}</a>
 </p>`).join(''))</script>
+
+
+
+<footer>
+
+<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<p class="footer-text">
+Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+</p>
+
+</footer>
+
+
+</body>
+</html>
