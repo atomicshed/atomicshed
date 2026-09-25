@@ -162,10 +162,11 @@ footer{
     max-width:780px;
 }
 
-.footer-text{
-    font-size:1rem;
+.footer-text {
+    font-size:0.7rem;
     line-height:1.35;
     margin-bottom:12px;
+    font-weight: normal;
 }
 @media(max-width:900px){
 
