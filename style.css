@@ -50,6 +50,12 @@ h2{
     margin-bottom:12px;
 }
 
+h3{
+    font-size:1.4rem;
+    line-height:1.05;
+    margin-bottom:9px;
+}
+
 p{
     max-width:780px;
     font-size:2rem;
