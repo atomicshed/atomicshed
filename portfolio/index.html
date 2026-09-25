@@ -9,6 +9,14 @@
 
 <body>
 
+<header>
+
+    <a href="/" class="logo">
+        <img src="images/atomicshed.svg" alt="atomicshed">
+    </a>
+
+</header>
+
 <div id=agencies>
 </div>
 <script>fetch('agencies.json').then(r=>r.json()).then(a=>agencies.innerHTML=a.map(x=>`<p>
