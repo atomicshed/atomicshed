@@ -4,7 +4,7 @@
 <header>
 <a class=logo href='/'><img src='/images/atomicshed.svg'></a>
 </header>
-
+<body>
 <div id=project></div>
 
 <script>
@@ -39,7 +39,7 @@ Promise.all([
 
     project.innerHTML=`<h1>${p.title}</h1>
 
-<p>${p.description}</p>
+<h3>${p.description}</h3>
 
 ${hero ? `
 
@@ -67,3 +67,20 @@ ${gallery.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
 
 });
 </script>
+
+<footer>
+
+<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<p class="footer-text">
+Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+</p>
+
+</footer>
+
+
+</body>
