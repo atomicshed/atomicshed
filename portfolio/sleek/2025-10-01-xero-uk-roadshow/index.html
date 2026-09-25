@@ -1,10 +1,12 @@
 <!doctype html>
 <link rel=stylesheet href=/style.css>
-<header> 
+
+<header>
 <a class=logo href='/'><img src='/images/atomicshed.svg'></a>
 </header>
-<div id=project>
-</div>
+
+<div id=project></div>
+
 <script>
 const USER='atomicshed',REPO='atomicshed';
 const path=location.pathname.replace(/\/index\.html$/,'').replace(/^\/|\/$/g,'');
@@ -32,8 +34,18 @@ Promise.all([
 
         });
 
+    const hero = imgs.find(i => /^hero\./i.test(i.name));
+    const gallery = imgs.filter(i => i !== hero);
+
     project.innerHTML=`<h1>${p.title}</h1>
+
 <p>${p.description}</p>
+
+${hero ? `
+<a href='${hero.name}?v=${hero.sha}' target=_blank>
+    <img class="hero" src='${hero.name}?v=${hero.sha}' alt=''>
+</a>` : ''}
+
 <div class=project-details>
 <div>Client</div>
 <div>${p.client}</div>
@@ -46,9 +58,12 @@ Promise.all([
 <div>Skills</div>
 <div>${p.skills.join(', ')}</div>
 </div>
-<div class=gallery>${imgs.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
+
+<div class=gallery>
+${gallery.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
 <img src='${i.name}?v=${i.sha}' alt=''>
-</a>`).join('')}</div>`;
+</a>`).join('')}
+</div>`;
 
 });
 </script>
