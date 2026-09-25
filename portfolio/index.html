@@ -1,0 +1,10 @@
+<!doctype html>
+<link rel=stylesheet href=../style.css>
+<header>
+<a class=logo href='/'><img src='../images/atomicshed.png'></a>
+</header>
+<div id=agencies>
+</div>
+<script>fetch('agencies.json').then(r=>r.json()).then(a=>agencies.innerHTML=a.map(x=>`<p>
+<a href="${x.folder}/">${x.name}</a>
+</p>`).join(''))</script>

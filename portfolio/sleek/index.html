@@ -1,0 +1,18 @@
+<!doctype html>
+<link rel=stylesheet href=../../style.css>
+<header>
+<a class=logo href='/'>
+<img src='../../images/atomicshed.png'>
+</a>
+</header>
+<p>
+<a href='../'>&larr; Portfolio</a>
+</p>
+<div id=projects>
+</div>
+<script>fetch('projects.json').then(r=>r.json()).then(p=>projects.innerHTML=p.map(x=>`<section>
+<h2>
+<a href="${x.folder}/">${x.title}</a>
+</h2>
+<p>${x.description}</p>
+</section>`).join(''))</script>

@@ -1,0 +1,1 @@
+Gallery auto-discovers all images via GitHub API and uses each file's SHA for cache-busting.
