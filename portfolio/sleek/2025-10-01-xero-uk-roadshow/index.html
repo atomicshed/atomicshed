@@ -1,100 +1,101 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>atomicshed : John Cooper</title>
-<link rel="stylesheet" href="/style.css">
-</head>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>atomicshed : John Cooper</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
 
-<body>
+	<body>
 
-<header>
+		<header>
+	
+			<a href="/" class="logo">
+				<img src="/images/atomicshed.svg" alt="atomicshed">
+			</a>
+	
+		</header>
+	
+	
+	
+		<div id=project></div>
+		
+		<script>
+		const USER='atomicshed',REPO='atomicshed';
+		const path=location.pathname.replace(/\/index\.html$/,'').replace(/^\/|\/$/g,'');
+		const api=`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+		
+		Promise.all([
+			fetch('project.json').then(r=>r.json()),
+			fetch(api).then(r=>r.json())
+		]).then(([p,files])=>{
+		
+			const imgs=files
+				.filter(f=>/\.(jpe?g|png|gif|webp|svg)$/i.test(f.name))
+				.sort((a,b)=>{
+		
+					const aHero=/^hero\./i.test(a.name);
+					const bHero=/^hero\./i.test(b.name);
+		
+					if(aHero&&!bHero) return -1;
+					if(!aHero&&bHero) return 1;
+		
+					return a.name.localeCompare(b.name,undefined,{
+						numeric:true,
+						sensitivity:"base"
+					});
+		
+				});
+		
+			const hero = imgs.find(i => /^hero\./i.test(i.name));
+			const gallery = imgs.filter(i => i !== hero);
+		
+			project.innerHTML=`<h1>${p.title}</h1>
+		
+		<h3>${p.description}</h3>
+		
+		${hero ? `
+		
+			<img class="hero" src='${hero.name}?v=${hero.sha}' alt=''>
+		` : ''}
+		
+		<div class=project-details>
+		<div>Client</div>
+		<div>${p.client}</div>
+		<div>Agency</div>
+		<div><a href="../">${p.agency}</a></div>
+		<div>Location</div>
+		<div>${p.location}</div>
+		<div>Date</div>
+		<div>${new Date(p.date).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</div>
+		<div>Skills</div>
+		<div>${p.skills.join(', ')}</div>
+		</div>
+		
+		<div class=gallery>
+		${gallery.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
+		<img src='${i.name}?v=${i.sha}' alt=''>
+		</a>`).join('')}
+		</div>`;
+		
+		});
+		</script>
+		
+		<footer>
+		
+		<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+		
+		<script>
+		document.getElementById("year").textContent = new Date().getFullYear();
+		</script>
+		
+		<p class="footer-text">
+		Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+		</p>
+		
+		</footer>
 
-    <a href="/" class="logo">
-        <img src="/images/atomicshed.svg" alt="atomicshed">
-    </a>
 
-</header>
-
-
-
-<div id=project></div>
-
-<script>
-const USER='atomicshed',REPO='atomicshed';
-const path=location.pathname.replace(/\/index\.html$/,'').replace(/^\/|\/$/g,'');
-const api=`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
-
-Promise.all([
-    fetch('project.json').then(r=>r.json()),
-    fetch(api).then(r=>r.json())
-]).then(([p,files])=>{
-
-    const imgs=files
-        .filter(f=>/\.(jpe?g|png|gif|webp|svg)$/i.test(f.name))
-        .sort((a,b)=>{
-
-            const aHero=/^hero\./i.test(a.name);
-            const bHero=/^hero\./i.test(b.name);
-
-            if(aHero&&!bHero) return -1;
-            if(!aHero&&bHero) return 1;
-
-            return a.name.localeCompare(b.name,undefined,{
-                numeric:true,
-                sensitivity:"base"
-            });
-
-        });
-
-    const hero = imgs.find(i => /^hero\./i.test(i.name));
-    const gallery = imgs.filter(i => i !== hero);
-
-    project.innerHTML=`<h1>${p.title}</h1>
-
-<h3>${p.description}</h3>
-
-${hero ? `
-
-    <img class="hero" src='${hero.name}?v=${hero.sha}' alt=''>
-` : ''}
-
-<div class=project-details>
-<div>Client</div>
-<div>${p.client}</div>
-<div>Agency</div>
-<div><a href="../">${p.agency}</a></div>
-<div>Location</div>
-<div>${p.location}</div>
-<div>Date</div>
-<div>${new Date(p.date).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</div>
-<div>Skills</div>
-<div>${p.skills.join(', ')}</div>
-</div>
-
-<div class=gallery>
-${gallery.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
-<img src='${i.name}?v=${i.sha}' alt=''>
-</a>`).join('')}
-</div>`;
-
-});
-</script>
-
-<footer>
-
-<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
-
-<script>
-document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-<p class="footer-text">
-Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
-</p>
-
-</footer>
-
-
-</body>
+	</body>
+</html>
