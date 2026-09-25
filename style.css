@@ -157,7 +157,16 @@ p{
     width:100%;
     display:block;
 }
+footer{
+    margin:180px 0 40px;
+    max-width:780px;
+}
 
+.footer-text{
+    font-size:1rem;
+    line-height:1.35;
+    margin-bottom:12px;
+}
 @media(max-width:900px){
 
     body{
