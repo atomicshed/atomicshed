@@ -22,7 +22,7 @@ header{
 }
 
 .logo img{
-    height:32px;
+    height:132px;
     width:auto;
     display:block;
 }
@@ -140,6 +140,13 @@ p{
     line-height:1.4;
 }
 
+.hero{
+    display:block;
+    width:auto;
+    height:auto;
+    max-width:min(100%, 900px);
+    max-height:70vh;
+}
 .gallery{
     display:grid;
     gap:30px;
