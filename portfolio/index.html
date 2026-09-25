@@ -17,24 +17,23 @@
 
 	</header>
 
-	<div id=agencies>
-	</div>
-	<script>fetch('agencies.json').then(r=>r.json()).then(a=>agencies.innerHTML=a.map(x=>`<p>
-	<a href="${x.folder}/">${x.name}</a>
-	</p>`).join(''))</script>
+	<div id=agencies></div>
+		<script>fetch('agencies.json').then(r=>r.json()).then(a=>agencies.innerHTML=a.map(x=>`<p>
+		<a href="${x.folder}/">${x.name}</a>
+		</p>`).join(''))</script>
 
 
 
-	<footer>
-		<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
-
-	<script>
-	document.getElementById("year").textContent = new Date().getFullYear();
-	</script>
-
-		<p class="footer-text">	Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.</p>
-
-	</footer>
+		<footer>
+			<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+	
+		<script>
+		document.getElementById("year").textContent = new Date().getFullYear();
+		</script>
+	
+			<p class="footer-text">	Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.</p>
+	
+		</footer>
 
 
 	</body>
