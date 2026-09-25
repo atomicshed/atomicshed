@@ -1,0 +1,24 @@
+<!doctype html>
+<link rel=stylesheet href=/style.css>
+<header>
+<a class=logo href='/'><img src='/images/atomicshed.svg'></a>
+</header>
+<div id=project>
+</div>
+<script>const USER='atomicshed',REPO='atomicshed';const path=location.pathname.replace(/\/index\.html$/,'').replace(/^\/|\/$/g,'');const api=`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;Promise.all([fetch('project.json').then(r=>r.json()),fetch(api).then(r=>r.json())]).then(([p,files])=>{const imgs=files.filter(f=>/\.(jpe?g|png|gif|webp)$/i.test(f.name)).sort((a,b)=>a.name==='hero.jpg'?-1:b.name==='hero.jpg'?1:a.name.localeCompare(b.name,undefined,{numeric:true}));project.innerHTML=`<h1>${p.title}</h1>
+<p>${p.description}</p>
+<div class=project-details>
+<div>Client</div>
+<div>${p.client}</div>
+<div>Agency</div>
+<div><a href="../">${p.agency}</a></div>
+<div>Location</div>
+<div>${p.location}</div>
+<div>Date</div>
+<div>${new Date(p.date).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</div>
+<div>Skills</div>
+<div>${p.skills.join(', ')}</div>
+</div>
+<div class=gallery>${imgs.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
+<img src='${i.name}?v=${i.sha}'>
+</a>`).join('')}</div>`})</script>
