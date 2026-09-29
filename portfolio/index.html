@@ -4,45 +4,57 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : AGENCIES v5.1</title>
+    <title>atomicshed : AGENCIES v10</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
-        .agency-grid {
+        .agency-name {
+            font-size:3rem;
+            line-height:1;
+            margin-bottom:50px;
+        }
+
+        .project-grid {
             display:grid;
             grid-template-columns:repeat(4, minmax(0, 1fr));
             gap:30px;
             width:100%;
         }
 
-        .agency-card a {
+        .project-card a {
             display:block;
         }
 
-        .agency-card img {
+        .project-card img {
             display:block;
             width:100%;
             aspect-ratio:16 / 9;
             object-fit:cover;
         }
 
-        .agency-card p {
+        .project-card h2 {
             font-size:1.5rem;
             line-height:1.1;
             margin:10px 0 0;
         }
 
-        .agency-card a:hover img {
+        .project-card h3 {
+            font-size:1rem;
+            line-height:1.2;
+            margin:5px 0 0;
+        }
+
+        .project-card a:hover img {
             opacity:.75;
         }
 
         @media (max-width:900px) {
-            .agency-grid {
+            .project-grid {
                 grid-template-columns:repeat(2, minmax(0, 1fr));
                 gap:20px;
             }
 
-            .agency-card p {
+            .project-card h2 {
                 font-size:1.2rem;
             }
         }
@@ -59,46 +71,116 @@
 
 </header>
 
-<div id="agencies" class="agency-grid"></div>
+<h2 class="agency-name" id="agency-name"></h2>
+
+<div id="agency" class="project-grid"></div>
 
 <script>
+
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-fetch('agencies.json')
-    .then(r => r.json())
-    .then(agencies => {
+/* Get the current agency folder */
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
 
-        agencies.forEach(x => {
+/* Display agency name */
+const agencyName = path.split('/').pop();
 
-            const api =
-                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${x.folder}`;
+document.getElementById('agency-name').textContent = agencyName;
 
-            fetch(api)
-                .then(r => r.json())
+/* GitHub API location for this agency */
+const api =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+
+/* Load projects.json */
+fetch('projects.json')
+    .then(r => {
+        if (!r.ok) throw new Error('Could not load projects.json');
+        return r.json();
+    })
+    .then(projects => {
+
+        /* Newest first, using date at start of folder name */
+        projects.sort((a, b) =>
+            b.folder.slice(0, 10).localeCompare(
+                a.folder.slice(0, 10)
+            )
+        );
+
+        /* Find hero image for each project */
+        const requests = projects.map(project => {
+
+            const projectAPI =
+                `${api}/${encodeURIComponent(project.folder)}`;
+
+            return fetch(projectAPI)
+                .then(r => {
+                    if (!r.ok) {
+                        throw new Error(
+                            `Could not load ${project.folder}`
+                        );
+                    }
+
+                    return r.json();
+                })
                 .then(files => {
 
-                    const hero = files.find(f =>
-                        /^hero\./i.test(f.name) &&
-                        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                    const hero = files.find(file =>
+                        /^hero\./i.test(file.name) &&
+                        /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name)
                     );
 
-                    if (!hero) return;
+                    if (!hero) {
+                        console.log(
+                            `No hero image found for ${project.folder}`
+                        );
+                        return '';
+                    }
 
-                    document.getElementById('agencies').insertAdjacentHTML(
-                        'beforeend',
-                        `
-                        <section class="agency-card">
-                            <a href="${x.folder}/">
-                                <img src="${hero.download_url}" alt="${x.name}">
-                                <p>${x.name}</p>
+                    return `
+                        <section class="project-card">
+
+                            <a href="${project.folder}/">
+
+                                <img
+                                    src="${hero.download_url}"
+                                    alt="${project.title}"
+                                >
+
+                                <h2>${project.title}</h2>
+
+                                <h3>${project.description}</h3>
+
                             </a>
+
                         </section>
-                        `
-                    );
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    return '';
                 });
         });
+
+        return Promise.all(requests);
+    })
+    .then(cards => {
+
+        document.getElementById('agency').innerHTML =
+            cards.join('');
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById('agency').innerHTML =
+            '<p>Unable to load projects.</p>';
+
     });
+
 </script>
 
 <footer>
@@ -108,11 +190,14 @@ fetch('agencies.json')
     </p>
 
     <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
     </script>
 
     <p class="footer-text">
-        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+        Work shown is presented for portfolio purposes only.
+        Copyright and trademarks remain the property of the
+        respective agencies, clients and rights holders.
     </p>
 
 </footer>
