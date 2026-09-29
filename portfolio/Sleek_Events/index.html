@@ -4,33 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : Cards Portfolio v3<>/title>
+    <title>atomicshed : Portfolio v5</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
-        .agency-hero {
-            display:block;
-            width:auto;
-            height:auto;
-            max-width:min(100%, 1200px);
-            max-height:70vh;
-            margin:0 0 80px;
+        .agency-name {
+            font-size:3rem;
+            line-height:1;
+            margin-bottom:50px;
         }
 
-       .project-grid {
-			display:grid;
-			grid-template-columns:repeat(4, minmax(0, 1fr));
-			gap:30px;
-			width:100%;
-		}
+        .project-grid {
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:30px;
+            width:100%;
+        }
 
-       .agency-card img,
-		.project-card img {
-			display:block;
-			width:100%;
-			aspect-ratio:16 / 9;
-			object-fit:cover;
-		}
+        .project-card a {
+            display:block;
+        }
+
+        .project-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
 
         .project-card h2 {
             font-size:1.5rem;
@@ -44,20 +44,15 @@
             margin:5px 0 0;
         }
 
-        .project-card a {
-            display:block;
-        }
-
         .project-card a:hover img {
             opacity:.75;
         }
 
         @media (max-width:900px) {
-          .agency-grid,
-    .project-grid {
-        grid-template-columns:repeat(2, minmax(0, 1fr));
-        gap:20px;
-    }
+            .project-grid {
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;
+            }
 
             .project-card h2 {
                 font-size:1.2rem;
@@ -69,15 +64,16 @@
 <body>
 
 <header>
+
     <a href="/" class="logo">
         <img src="/images/atomicshed.svg" alt="atomicshed">
     </a>
+
 </header>
 
+<h2 class="agency-name" id="agency-name"></h2>
+
 <div id="agency"></div>
-
-
-
 
 <script>
 const USER = 'atomicshed';
@@ -97,6 +93,8 @@ Promise.all([
 .then(([projects, files]) => {
 
     /*
+    Agency hero image currently disabled.
+
     const hero = files.find(f =>
         /^hero\./i.test(f.name) &&
         /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
@@ -155,91 +153,6 @@ Promise.all([
         });
 });
 </script>
-
-
-
-<!-- 
-<script>
-const USER = 'atomicshed';
-const REPO = 'atomicshed';
-
-const path = location.pathname
-    .replace(/\/index\.html$/, '')
-    .replace(/^\/|\/$/g, '');
-
-const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
-
-Promise.all([
-    fetch('projects.json').then(r => r.json()),
-    fetch(api).then(r => r.json())
-])
-.then(([projects, files]) => {
-
-    const hero = files.find(f =>
-        /^hero\./i.test(f.name) &&
-        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-    );
-
-    projects.sort((a, b) =>
-        b.folder.slice(0, 10).localeCompare(
-            a.folder.slice(0, 10)
-        )
-    );
-
-    const heroHTML = hero ? `
-        <img
-            class="agency-hero"
-            src="${hero.download_url}"
-            alt=""
-        >
-    ` : '';
-
-    const projectPromises = projects.map(x => {
-
-        const projectAPI =
-            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
-
-        return fetch(projectAPI)
-            .then(r => r.json())
-            .then(files => {
-
-                const projectHero = files.find(f =>
-                    /^hero\./i.test(f.name) &&
-                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-                );
-
-                if (!projectHero) return '';
-
-                return `
-                    <section class="project-card">
-                        <a href="${x.folder}/">
-                            <img
-                                src="${projectHero.download_url}"
-                                alt="${x.title}"
-                            >
-                            <h2>${x.title}</h2>
-                            <h3>${x.description}</h3>
-                        </a>
-                    </section>
-                `;
-            });
-    });
-
-    Promise.all(projectPromises)
-        .then(cards => {
-
-            document.getElementById('agency').innerHTML = `
-                ${heroHTML}
-
-                <div class="project-grid">
-                    ${cards.join('')}
-                </div>
-            `;
-        });
-});
-</script>
- -->
 
 <footer>
 
