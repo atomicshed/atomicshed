@@ -1,7 +1,7 @@
 [
 {
-	"title":"AWS",
-	"folder":"2025-10-09-AWS",
+	"title":"AWS ISV",
+	"folder":"2025-10-09-AWS_ISV",
 	"description":"Conference."
 }
 ,
@@ -18,15 +18,15 @@
 }
 ,
 {
-	"title":"temenos 25",
-	"folder":"2025-10-01-temenos",
-	"description":"Overseas Conferences."
-}
-,
-{
 	"title":"AWS Ladies That Launch 2024-20226",
 	"folder":"2024-12-08-AWS_LtL",
 	"description":"Small AWS conferences."
+}
+,
+{
+	"title":"temenos 25",
+	"folder":"2025-10-01-temenos",
+	"description":"Overseas Conferences."
 }
 ]
 
