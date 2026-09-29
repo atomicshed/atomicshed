@@ -114,6 +114,10 @@ p{
     color:#fff;
 }
 
+.date_list {
+	font-weight:normal;
+	color: grey;
+}
 .back{
     display:inline-block;
     margin-bottom:40px;

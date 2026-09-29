@@ -34,10 +34,10 @@ fetch('projects.json')
 
             return `<section>
                 <h2><a href="${x.folder}/">${x.title}</a></h2>
-                <h3>${date.toLocaleDateString('en-GB', {
+                <h3><class="date_list">${date.toLocaleDateString('en-GB', {
                     month: 'long',
                     year: 'numeric'
-                })} | ${x.description}</h3>
+                })} | </class>${x.description}</h3>
             </section>`;
         }).join('');
     });
