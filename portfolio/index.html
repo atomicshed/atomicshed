@@ -4,57 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : AGENCY LIST</title>
+    <title>atomicshed : Portfolio</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
-        .agency-name {
-            font-size:3rem;
-            line-height:1;
-            margin-bottom:50px;
-        }
-
-        .project-grid {
+        .agency-grid {
             display:grid;
             grid-template-columns:repeat(4, minmax(0, 1fr));
             gap:30px;
             width:100%;
         }
 
-        .project-card a {
+        .agency-card a {
             display:block;
         }
 
-        .project-card img {
+        .agency-card img {
             display:block;
             width:100%;
             aspect-ratio:16 / 9;
             object-fit:cover;
         }
 
-        .project-card h2 {
+        .agency-card p {
             font-size:1.5rem;
             line-height:1.1;
             margin:10px 0 0;
         }
 
-        .project-card h3 {
-            font-size:1rem;
-            line-height:1.2;
-            margin:5px 0 0;
-        }
-
-        .project-card a:hover img {
+        .agency-card a:hover img {
             opacity:.75;
         }
 
         @media (max-width:900px) {
-            .project-grid {
+            .agency-grid {
                 grid-template-columns:repeat(2, minmax(0, 1fr));
                 gap:20px;
             }
 
-            .project-card h2 {
+            .agency-card p {
                 font-size:1.2rem;
             }
         }
@@ -71,188 +59,76 @@
 
 </header>
 
-<h2 class="agency-name" id="agency-name"></h2>
-
-<div id="agency" class="project-grid"></div>
+<div id="agencies" class="agency-grid"></div>
 
 <script>
 
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-/*
-    Work out the current agency folder.
-    Example:
-    /portfolio/Fresh/
-    becomes:
-    Fresh
-*/
-
-const path = location.pathname
+const portfolioPath = location.pathname
     .replace(/\/index\.html$/, '')
     .replace(/^\/|\/$/g, '');
 
-const agencyFolder = path.split('/').pop();
+fetch('agencies.json')
+    .then(r => r.json())
+    .then(agencies => {
 
-/*
-    Encode each part of the GitHub path separately.
-*/
+        const requests = agencies.map(x => {
 
-const githubPath = path
-    .split('/')
-    .map(encodeURIComponent)
-    .join('/');
+            const api =
+                `https://api.github.com/repos/${USER}/${REPO}/contents/${portfolioPath}/${encodeURIComponent(x.folder)}`;
 
-const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${githubPath}`;
+            return fetch(api)
+                .then(r => {
+                    if (!r.ok) {
+                        throw new Error(`${x.name}: ${r.status}`);
+                    }
+                    return r.json();
+                })
+                .then(files => {
 
-
-/*
-    Load projects.json and agencies.json.
-*/
-
-Promise.all([
-
-    fetch(`/${path}/projects.json`)
-        .then(r => {
-            if (!r.ok) {
-                throw new Error(
-                    `projects.json returned ${r.status}`
-                );
-            }
-            return r.json();
-        }),
-
-    fetch('/portfolio/agencies.json')
-        .then(r => {
-            if (!r.ok) {
-                throw new Error(
-                    `agencies.json returned ${r.status}`
-                );
-            }
-            return r.json();
-        })
-
-])
-
-.then(([projects, agencies]) => {
-
-    /*
-        Find the agency name.
-    */
-
-    const agency = agencies.find(x =>
-        x.folder.toLowerCase() ===
-        agencyFolder.toLowerCase()
-    );
-
-    document.getElementById('agency-name').textContent =
-        agency ? agency.name : agencyFolder;
-
-
-    /*
-        Sort projects newest first.
-    */
-
-    projects.sort((a, b) =>
-        b.folder.slice(0, 10).localeCompare(
-            a.folder.slice(0, 10)
-        )
-    );
-
-
-    /*
-        Find the hero image for each project.
-    */
-
-    const requests = projects.map(project => {
-
-        const projectPath =
-            `${githubPath}/${encodeURIComponent(project.folder)}`;
-
-        const projectAPI =
-            `https://api.github.com/repos/${USER}/${REPO}/contents/${projectPath}`;
-
-        return fetch(projectAPI)
-
-            .then(r => {
-
-                if (!r.ok) {
-                    throw new Error(
-                        `${project.folder}: GitHub returned ${r.status}`
+                    const hero = files.find(f =>
+                        /^hero\./i.test(f.name) &&
+                        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
                     );
-                }
 
-                return r.json();
+                    if (!hero) {
+                        console.log(`No hero image found for ${x.name}`);
+                        return '';
+                    }
 
-            })
-
-            .then(files => {
-
-                const hero = files.find(file =>
-                    /^hero\./i.test(file.name) &&
-                    /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name)
-                );
-
-                if (!hero) {
-                    console.log(
-                        `No hero image found for ${project.folder}`
-                    );
+                    return `
+                        <section class="agency-card">
+                            <a href="${x.folder}/">
+                                <img
+                                    src="${hero.download_url}"
+                                    alt="${x.name}"
+                                >
+                                <p>${x.name}</p>
+                            </a>
+                        </section>
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
                     return '';
-                }
+                });
+        });
 
-                return `
-                    <section class="project-card">
-
-                        <a href="${project.folder}/">
-
-                            <img
-                                src="${hero.download_url}"
-                                alt="${project.title}"
-                            >
-
-                            <h2>${project.title}</h2>
-
-                            <h3>${project.description}</h3>
-
-                        </a>
-
-                    </section>
-                `;
-
-            })
-
-            .catch(error => {
-
-                console.error(error);
-                return '';
-
+        Promise.all(requests)
+            .then(cards => {
+                document.getElementById('agencies').innerHTML =
+                    cards.join('');
             });
+    })
+    .catch(error => {
+        console.error(error);
+        document.getElementById('agencies').innerHTML =
+            '<p>Unable to load portfolio.</p>';
     });
 
-
-    return Promise.all(requests);
-
-})
-
-.then(cards => {
-
-    document.getElementById('agency').innerHTML =
-        cards.join('');
-
-})
-
-.catch(error => {
-
-    console.error(error);
-
-    document.getElementById('agency').innerHTML =
-        `<p>Unable to load portfolio.<br>${error.message}</p>`;
-
-});
-
 </script>
-
 
 <footer>
 
@@ -261,14 +137,11 @@ Promise.all([
     </p>
 
     <script>
-    document.getElementById("year").textContent =
-        new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
     <p class="footer-text">
-        Work shown is presented for portfolio purposes only.
-        Copyright and trademarks remain the property of the
-        respective agencies, clients and rights holders.
+        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
     </p>
 
 </footer>
