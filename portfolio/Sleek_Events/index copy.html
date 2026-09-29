@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex, nofollow, noarchive">
+		<title>atomicshed : John Cooper</title>
+		<link rel="stylesheet" href="/style.css">
+	</head>
+
+	<body>
+
+	<header>
+		<a href="/" class="logo">
+			<img src="/images/atomicshed.svg" alt="atomicshed">
+		</a>
+	</header>
+	
+	
+
+	
+	<p>SLEEK</p>
+
+	<div id=projects></div>
+
+<script>
+fetch('projects.json')
+    .then(r => r.json())
+    .then(p => {
+        p.sort((a, b) => b.folder.slice(0, 10).localeCompare(a.folder.slice(0, 10)));
+
+        projects.innerHTML = p.map(x => {
+            const date = new Date(x.folder.slice(0, 10) + 'T12:00:00');
+
+            return `<section>
+                <h2><a href="${x.folder}/">${x.title}</a></h2>
+                <h3><class="date_list">${date.toLocaleDateString('en-GB', {
+                    month: 'long',
+                    year: 'numeric'
+                })} | </class>${x.description}</h3>
+            </section>`;
+        }).join('');
+    });
+</script>
+
+		<footer>
+			<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+	
+		<script>
+		document.getElementById("year").textContent = new Date().getFullYear();
+		</script>
+	
+			<p class="footer-text">	Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.</p>
+	
+		</footer>
+
+
+	</body>
+</html>
