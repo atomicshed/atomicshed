@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : Agency Portfolio</title>
+    <title>atomicshed : Portfolio</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
@@ -73,114 +73,85 @@
 
 <h2 class="agency-name" id="agency-name"></h2>
 
-<div id="agency" class="project-grid"></div>
+<div id="agency"></div>
 
 <script>
-
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-/* Get the current agency folder */
 const path = location.pathname
     .replace(/\/index\.html$/, '')
     .replace(/^\/|\/$/g, '');
 
-/* Display agency name */
-const agencyName = path.split('/').pop();
-
-document.getElementById('agency-name').textContent = agencyName;
-
-/* GitHub API location for this agency */
 const api =
     `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
-/* Load projects.json */
-fetch('projects.json')
-    .then(r => {
-        if (!r.ok) throw new Error('Could not load projects.json');
-        return r.json();
-    })
-    .then(projects => {
+Promise.all([
+    fetch('projects.json').then(r => r.json()),
+    fetch(api).then(r => r.json())
+])
+.then(([projects, files]) => {
 
-        /* Newest first, using date at start of folder name */
-        projects.sort((a, b) =>
-            b.folder.slice(0, 10).localeCompare(
-                a.folder.slice(0, 10)
-            )
-        );
+    /*
+    Agency hero image currently disabled.
 
-        /* Find hero image for each project */
-        const requests = projects.map(project => {
+    const hero = files.find(f =>
+        /^hero\./i.test(f.name) &&
+        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+    );
+    */
 
-            const projectAPI =
-                `${api}/${encodeURIComponent(project.folder)}`;
+    const agencyName = path.split('/').pop();
 
-            return fetch(projectAPI)
-                .then(r => {
-                    if (!r.ok) {
-                        throw new Error(
-                            `Could not load ${project.folder}`
-                        );
-                    }
+    document.getElementById('agency-name').textContent = agencyName;
 
-                    return r.json();
-                })
-                .then(files => {
+    projects.sort((a, b) =>
+        b.folder.slice(0, 10).localeCompare(
+            a.folder.slice(0, 10)
+        )
+    );
 
-                    const hero = files.find(file =>
-                        /^hero\./i.test(file.name) &&
-                        /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name)
-                    );
+    const projectPromises = projects.map(x => {
 
-                    if (!hero) {
-                        console.log(
-                            `No hero image found for ${project.folder}`
-                        );
-                        return '';
-                    }
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
 
-                    return `
-                        <section class="project-card">
+        return fetch(projectAPI)
+            .then(r => r.json())
+            .then(files => {
 
-                            <a href="${project.folder}/">
+                const projectHero = files.find(f =>
+                    /^hero\./i.test(f.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                );
 
-                                <img
-                                    src="${hero.download_url}"
-                                    alt="${project.title}"
-                                >
+                if (!projectHero) return '';
 
-                                <h2>${project.title}</h2>
-
-                                <h3>${project.description}</h3>
-
-                            </a>
-
-                        </section>
-                    `;
-                })
-                .catch(error => {
-                    console.error(error);
-                    return '';
-                });
-        });
-
-        return Promise.all(requests);
-    })
-    .then(cards => {
-
-        document.getElementById('agency').innerHTML =
-            cards.join('');
-
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        document.getElementById('agency').innerHTML =
-            '<p>Unable to load projects.</p>';
-
+                return `
+                    <section class="project-card">
+                        <a href="${x.folder}/">
+                            <img
+                                src="${projectHero.download_url}"
+                                alt="${x.title}"
+                            >
+                            <h2>${x.title}</h2>
+                            <h3>${x.description}</h3>
+                        </a>
+                    </section>
+                `;
+            });
     });
 
+    Promise.all(projectPromises)
+        .then(cards => {
+
+            document.getElementById('agency').innerHTML = `
+                <div class="project-grid">
+                    ${cards.join('')}
+                </div>
+            `;
+        });
+});
 </script>
 
 <footer>
@@ -190,14 +161,11 @@ fetch('projects.json')
     </p>
 
     <script>
-    document.getElementById("year").textContent =
-        new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
     <p class="footer-text">
-        Work shown is presented for portfolio purposes only.
-        Copyright and trademarks remain the property of the
-        respective agencies, clients and rights holders.
+        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
     </p>
 
 </footer>
