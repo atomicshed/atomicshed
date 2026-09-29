@@ -36,12 +36,12 @@ fetch('projects.json')
                 <h3>${date.toLocaleDateString('en-GB', {
                     month: 'long',
                     year: 'numeric'
-                })}</h3>
-                <h3>${x.description}</h3>
+                })} | ${x.description}</h3>
             </section>`;
         }).join('');
     });
 </script>
+
 
 		<footer>
 			<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
