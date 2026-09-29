@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : Cards Portfolio</title>
+    <title>atomicshed : Portfolio</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
@@ -59,57 +59,47 @@
 <div id="agencies" class="agency-grid"></div>
 
 <script>
-const agencies = document.getElementById('agencies');
+const USER = 'atomicshed';
+const REPO = 'atomicshed';
 
 fetch('agencies.json')
     .then(r => r.json())
-    .then(list => {
+    .then(agencies => {
 
-        list.forEach(x => {
+        agencies.forEach(x => {
 
-            fetch(`${x.folder}/projects.json`)
+            const api =
+                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${x.folder}`;
+
+            fetch(api)
                 .then(r => r.json())
-                .then(projects => {
+                .then(files => {
 
-                    if (!projects.length) return;
-
-                    projects.sort((a, b) =>
-                        b.folder.slice(0, 10).localeCompare(
-                            a.folder.slice(0, 10)
-                        )
+                    const hero = files.find(f =>
+                        /^hero\./i.test(f.name) &&
+                        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
                     );
 
-                    const newest = projects[0];
+                    if (!hero) return;
 
-                    fetch(`${x.folder}/${newest.folder}/`)
-                        .then(r => r.json())
-                        .then(files => {
-
-                            const hero = files.find(f =>
-                                /^hero\./i.test(f.name) &&
-                                /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-                            );
-
-                            if (!hero) return;
-
-                            const image =
-                                `${x.folder}/${newest.folder}/${hero.name}`;
-
-                            agencies.insertAdjacentHTML('beforeend', `
-                                <section class="agency-card">
-                                    <a href="${x.folder}/">
-                                        <img src="${image}" alt="${x.name}">
-                                        <p>${x.name}</p>
-                                    </a>
-                                </section>
-                            `);
-                        });
+                    document.getElementById('agencies').insertAdjacentHTML(
+                        'beforeend',
+                        `
+                        <section class="agency-card">
+                            <a href="${x.folder}/">
+                                <img src="${hero.download_url}" alt="${x.name}">
+                                <p>${x.name}</p>
+                            </a>
+                        </section>
+                        `
+                    );
                 });
         });
     });
 </script>
 
 <footer>
+
     <p class="footer-text">
         &copy; <span id="year"></span> John Cooper / atomicshed
     </p>
@@ -121,6 +111,7 @@ fetch('agencies.json')
     <p class="footer-text">
         Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
     </p>
+
 </footer>
 
 </body>
