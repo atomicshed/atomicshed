@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : AGENCIES v10</title>
+    <title>atomicshed : AGENCY LIST</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
@@ -80,108 +80,179 @@
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-/* Get the current agency folder */
+/*
+    Work out the current agency folder.
+    Example:
+    /portfolio/Fresh/
+    becomes:
+    Fresh
+*/
+
 const path = location.pathname
     .replace(/\/index\.html$/, '')
     .replace(/^\/|\/$/g, '');
 
-/* Display agency name */
-const agencyName = path.split('/').pop();
+const agencyFolder = path.split('/').pop();
 
-document.getElementById('agency-name').textContent = agencyName;
+/*
+    Encode each part of the GitHub path separately.
+*/
 
-/* GitHub API location for this agency */
+const githubPath = path
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/');
+
 const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${githubPath}`;
 
-/* Load projects.json */
-fetch('projects.json')
-    .then(r => {
-        if (!r.ok) throw new Error('Could not load projects.json');
-        return r.json();
-    })
-    .then(projects => {
 
-        /* Newest first, using date at start of folder name */
-        projects.sort((a, b) =>
-            b.folder.slice(0, 10).localeCompare(
-                a.folder.slice(0, 10)
-            )
-        );
+/*
+    Load projects.json and agencies.json.
+*/
 
-        /* Find hero image for each project */
-        const requests = projects.map(project => {
+Promise.all([
 
-            const projectAPI =
-                `${api}/${encodeURIComponent(project.folder)}`;
+    fetch(`/${path}/projects.json`)
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(
+                    `projects.json returned ${r.status}`
+                );
+            }
+            return r.json();
+        }),
 
-            return fetch(projectAPI)
-                .then(r => {
-                    if (!r.ok) {
-                        throw new Error(
-                            `Could not load ${project.folder}`
-                        );
-                    }
+    fetch('/portfolio/agencies.json')
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(
+                    `agencies.json returned ${r.status}`
+                );
+            }
+            return r.json();
+        })
 
-                    return r.json();
-                })
-                .then(files => {
+])
 
-                    const hero = files.find(file =>
-                        /^hero\./i.test(file.name) &&
-                        /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name)
+.then(([projects, agencies]) => {
+
+    /*
+        Find the agency name.
+    */
+
+    const agency = agencies.find(x =>
+        x.folder.toLowerCase() ===
+        agencyFolder.toLowerCase()
+    );
+
+    document.getElementById('agency-name').textContent =
+        agency ? agency.name : agencyFolder;
+
+
+    /*
+        Sort projects newest first.
+    */
+
+    projects.sort((a, b) =>
+        b.folder.slice(0, 10).localeCompare(
+            a.folder.slice(0, 10)
+        )
+    );
+
+
+    /*
+        Find the hero image for each project.
+    */
+
+    const requests = projects.map(project => {
+
+        const projectPath =
+            `${githubPath}/${encodeURIComponent(project.folder)}`;
+
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${projectPath}`;
+
+        return fetch(projectAPI)
+
+            .then(r => {
+
+                if (!r.ok) {
+                    throw new Error(
+                        `${project.folder}: GitHub returned ${r.status}`
                     );
+                }
 
-                    if (!hero) {
-                        console.log(
-                            `No hero image found for ${project.folder}`
-                        );
-                        return '';
-                    }
+                return r.json();
 
-                    return `
-                        <section class="project-card">
+            })
 
-                            <a href="${project.folder}/">
+            .then(files => {
 
-                                <img
-                                    src="${hero.download_url}"
-                                    alt="${project.title}"
-                                >
+                const hero = files.find(file =>
+                    /^hero\./i.test(file.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name)
+                );
 
-                                <h2>${project.title}</h2>
-
-                                <h3>${project.description}</h3>
-
-                            </a>
-
-                        </section>
-                    `;
-                })
-                .catch(error => {
-                    console.error(error);
+                if (!hero) {
+                    console.log(
+                        `No hero image found for ${project.folder}`
+                    );
                     return '';
-                });
-        });
+                }
 
-        return Promise.all(requests);
-    })
-    .then(cards => {
+                return `
+                    <section class="project-card">
 
-        document.getElementById('agency').innerHTML =
-            cards.join('');
+                        <a href="${project.folder}/">
 
-    })
-    .catch(error => {
+                            <img
+                                src="${hero.download_url}"
+                                alt="${project.title}"
+                            >
 
-        console.error(error);
+                            <h2>${project.title}</h2>
 
-        document.getElementById('agency').innerHTML =
-            '<p>Unable to load projects.</p>';
+                            <h3>${project.description}</h3>
 
+                        </a>
+
+                    </section>
+                `;
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+                return '';
+
+            });
     });
 
+
+    return Promise.all(requests);
+
+})
+
+.then(cards => {
+
+    document.getElementById('agency').innerHTML =
+        cards.join('');
+
+})
+
+.catch(error => {
+
+    console.error(error);
+
+    document.getElementById('agency').innerHTML =
+        `<p>Unable to load portfolio.<br>${error.message}</p>`;
+
+});
+
 </script>
+
 
 <footer>
 
