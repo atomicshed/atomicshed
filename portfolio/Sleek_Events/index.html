@@ -76,6 +76,89 @@
 
 <div id="agency"></div>
 
+
+
+
+<script>
+const USER = 'atomicshed';
+const REPO = 'atomicshed';
+
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
+
+const api =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+
+Promise.all([
+    fetch('projects.json').then(r => r.json()),
+    fetch(api).then(r => r.json())
+])
+.then(([projects, files]) => {
+
+    /*
+    const hero = files.find(f =>
+        /^hero\./i.test(f.name) &&
+        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+    );
+    */
+
+    const agencyName = path.split('/').pop();
+
+    document.getElementById('agency-name').textContent = agencyName;
+
+    projects.sort((a, b) =>
+        b.folder.slice(0, 10).localeCompare(
+            a.folder.slice(0, 10)
+        )
+    );
+
+    const projectPromises = projects.map(x => {
+
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
+
+        return fetch(projectAPI)
+            .then(r => r.json())
+            .then(files => {
+
+                const projectHero = files.find(f =>
+                    /^hero\./i.test(f.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                );
+
+                if (!projectHero) return '';
+
+                return `
+                    <section class="project-card">
+                        <a href="${x.folder}/">
+                            <img
+                                src="${projectHero.download_url}"
+                                alt="${x.title}"
+                            >
+                            <h2>${x.title}</h2>
+                            <h3>${x.description}</h3>
+                        </a>
+                    </section>
+                `;
+            });
+    });
+
+    Promise.all(projectPromises)
+        .then(cards => {
+
+            document.getElementById('agency').innerHTML = `
+                <div class="project-grid">
+                    ${cards.join('')}
+                </div>
+            `;
+        });
+});
+</script>
+
+
+
+<!-- 
 <script>
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
@@ -156,6 +239,7 @@ Promise.all([
         });
 });
 </script>
+ -->
 
 <footer>
 
