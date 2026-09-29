@@ -74,11 +74,19 @@
 <div id="agency"></div>
 
 <script>
-const agency = document.getElementById('agency');
+const USER = 'atomicshed';
+const REPO = 'atomicshed';
+
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
+
+const api =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
 Promise.all([
     fetch('projects.json').then(r => r.json()),
-    fetch('./').then(r => r.json())
+    fetch(api).then(r => r.json())
 ])
 .then(([projects, files]) => {
 
@@ -96,34 +104,58 @@ Promise.all([
     const heroHTML = hero ? `
         <img
             class="agency-hero"
-            src="${hero.name}"
+            src="${hero.download_url}"
             alt=""
         >
     ` : '';
 
-    const projectsHTML = projects.map(x => `
-        <section class="project-card">
-            <a href="${x.folder}/">
-                <img
-                    src="${x.folder}/hero.jpg"
-                    alt="${x.title}"
-                >
-                <h2>${x.title}</h2>
-                <h3>${x.description}</h3>
-            </a>
-        </section>
-    `).join('');
+    const projectPromises = projects.map(x => {
 
-    agency.innerHTML = `
-        ${heroHTML}
-        <div class="project-grid">
-            ${projectsHTML}
-        </div>
-    `;
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
+
+        return fetch(projectAPI)
+            .then(r => r.json())
+            .then(files => {
+
+                const projectHero = files.find(f =>
+                    /^hero\./i.test(f.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                );
+
+                if (!projectHero) return '';
+
+                return `
+                    <section class="project-card">
+                        <a href="${x.folder}/">
+                            <img
+                                src="${projectHero.download_url}"
+                                alt="${x.title}"
+                            >
+                            <h2>${x.title}</h2>
+                            <h3>${x.description}</h3>
+                        </a>
+                    </section>
+                `;
+            });
+    });
+
+    Promise.all(projectPromises)
+        .then(cards => {
+
+            document.getElementById('agency').innerHTML = `
+                ${heroHTML}
+
+                <div class="project-grid">
+                    ${cards.join('')}
+                </div>
+            `;
+        });
 });
 </script>
 
 <footer>
+
     <p class="footer-text">
         &copy; <span id="year"></span> John Cooper / atomicshed
     </p>
@@ -135,6 +167,7 @@ Promise.all([
     <p class="footer-text">
         Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
     </p>
+
 </footer>
 
 </body>
