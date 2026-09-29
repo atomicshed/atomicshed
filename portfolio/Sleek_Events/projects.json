@@ -6,6 +6,12 @@
 }
 ,
 {
+	"title":"Paypal",
+	"folder":"2025-06-30-PayPal",
+	"description":"UK Conference."
+}
+,
+{
 	"title":"Xero Roadshow 25",
 	"folder":"2025-10-07-xero-uk-roadshow",
 	"description":"UK Roadshow."
@@ -23,3 +29,5 @@
 	"description":"Small AWS conferences."
 }
 ]
+
+
