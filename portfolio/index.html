@@ -1,51 +1,127 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="robots" content="noindex, nofollow, noarchive">
-		<title>atomicshed : John Cooper</title>
-		<link rel="stylesheet" href="/style.css">
-	</head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>atomicshed : Portfolio</title>
+    <link rel="stylesheet" href="/style.css">
 
-	<body>
+    <style>
+        .agency-grid {
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:30px;
+        }
 
-	<header>
-		<a href="/" class="logo">
-			<img src="/images/atomicshed.svg" alt="atomicshed">
-		</a>
-	</header>
+        .agency-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
 
-	<div id="agencies"></div>
+        .agency-card p {
+            font-size:1.5rem;
+            line-height:1.1;
+            margin:10px 0 0;
+        }
 
-	<script>
-	fetch('agencies.json')
-		.then(r => r.json())
-		.then(a => {
-			document.getElementById('agencies').innerHTML =
-				a.map(x => `
-					<p>
-						<a href="${x.folder}/">${x.name}</a>
-					</p>
-				`).join('');
-		});
-	</script>
+        .agency-card a {
+            display:block;
+        }
 
-	<footer>
+        .agency-card a:hover img {
+            opacity:.75;
+        }
 
-		<p class="footer-text">
-			&copy; <span id="year"></span> John Cooper / atomicshed
-		</p>
+        @media (max-width:900px) {
+            .agency-grid {
+                grid-template-columns:repeat(2, 1fr);
+                gap:20px;
+            }
 
-		<script>
-		document.getElementById("year").textContent = new Date().getFullYear();
-		</script>
+            .agency-card p {
+                font-size:1.2rem;
+            }
+        }
+    </style>
+</head>
 
-		<p class="footer-text">
-			Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
-		</p>
+<body>
 
-	</footer>
+<header>
+    <a href="/" class="logo">
+        <img src="/images/atomicshed.svg" alt="atomicshed">
+    </a>
+</header>
 
-	</body>
+<div id="agencies" class="agency-grid"></div>
+
+<script>
+const agencies = document.getElementById('agencies');
+
+fetch('agencies.json')
+    .then(r => r.json())
+    .then(list => {
+
+        list.forEach(x => {
+
+            fetch(`${x.folder}/projects.json`)
+                .then(r => r.json())
+                .then(projects => {
+
+                    if (!projects.length) return;
+
+                    projects.sort((a, b) =>
+                        b.folder.slice(0, 10).localeCompare(
+                            a.folder.slice(0, 10)
+                        )
+                    );
+
+                    const newest = projects[0];
+
+                    fetch(`${x.folder}/${newest.folder}/`)
+                        .then(r => r.json())
+                        .then(files => {
+
+                            const hero = files.find(f =>
+                                /^hero\./i.test(f.name) &&
+                                /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                            );
+
+                            if (!hero) return;
+
+                            const image =
+                                `${x.folder}/${newest.folder}/${hero.name}`;
+
+                            agencies.insertAdjacentHTML('beforeend', `
+                                <section class="agency-card">
+                                    <a href="${x.folder}/">
+                                        <img src="${image}" alt="${x.name}">
+                                        <p>${x.name}</p>
+                                    </a>
+                                </section>
+                            `);
+                        });
+                });
+        });
+    });
+</script>
+
+<footer>
+    <p class="footer-text">
+        &copy; <span id="year"></span> John Cooper / atomicshed
+    </p>
+
+    <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+    <p class="footer-text">
+        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+    </p>
+</footer>
+
+</body>
 </html>
