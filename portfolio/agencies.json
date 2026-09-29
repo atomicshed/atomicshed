@@ -1,13 +1,22 @@
-[{
-"name":"FRESH","folder":"Fresh"
-,
-"name":"SLEEK","folder":"Sleek"
-,
-"name":"MONGOOSE","folder":"Mongoose"
-,
-"name":"BRAY LEINO","folder":"Mongoose"
-,
-"name":"IVORY WORLDWIDE","folder":"Ivory_Worldwide"
-}]
-
- 
+[
+  {
+    "name": "FRESH",
+    "folder": "Fresh"
+  },
+  {
+    "name": "SLEEK",
+    "folder": "Sleek"
+  },
+  {
+    "name": "MONGOOSE",
+    "folder": "Mongoose"
+  },
+  {
+    "name": "BRAY LEINO",
+    "folder": "Mongoose"
+  },
+  {
+    "name": "IVORY WORLDWIDE",
+    "folder": "Ivory_Worldwide"
+  }
+]
