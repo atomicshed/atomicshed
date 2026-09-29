@@ -4,24 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : Agencies v3</title>
+    <title>atomicshed : AGENCIES v5</title>
     <link rel="stylesheet" href="/style.css">
 
     <style>
         .agency-grid {
-			display:grid;
-			grid-template-columns:repeat(4, minmax(0, 1fr));
-			gap:30px;
-			width:100%;
-		}
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:30px;
+            width:100%;
+        }
 
-       .agency-card img,
-		.project-card img {
-			display:block;
-			width:100%;
-			aspect-ratio:16 / 9;
-			object-fit:cover;
-		}
+        .agency-card a {
+            display:block;
+        }
+
+        .agency-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
 
         .agency-card p {
             font-size:1.5rem;
@@ -29,20 +32,15 @@
             margin:10px 0 0;
         }
 
-        .agency-card a {
-            display:block;
-        }
-
         .agency-card a:hover img {
             opacity:.75;
         }
 
         @media (max-width:900px) {
-             .agency-grid,
-    .project-grid {
-        grid-template-columns:repeat(2, minmax(0, 1fr));
-        gap:20px;
-    }
+            .agency-grid {
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;
+            }
 
             .agency-card p {
                 font-size:1.2rem;
@@ -54,24 +52,15 @@
 <body>
 
 <header>
+
     <a href="/" class="logo">
         <img src="/images/atomicshed.svg" alt="atomicshed">
     </a>
+
 </header>
 
 <div id="agencies" class="agency-grid"></div>
 
-
-
-
-
-
-<h2 class="agency-name" id="agency-name"></h2>
-
-<div id="agency"></div>
-
-
- 
 <script>
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
@@ -110,7 +99,7 @@ fetch('agencies.json')
                 });
         });
     });
-</script> 
+</script>
 
 <footer>
 
