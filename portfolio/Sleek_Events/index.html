@@ -80,70 +80,111 @@
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-/* Current agency folder */
+/*
+    Work out the current agency folder.
+    Example:
+    /portfolio/Fresh/
+    becomes:
+    Fresh
+*/
+
 const path = location.pathname
     .replace(/\/index\.html$/, '')
     .replace(/^\/|\/$/g, '');
 
 const agencyFolder = path.split('/').pop();
 
-/* GitHub API path for this agency */
+/*
+    Encode each part of the GitHub path separately.
+*/
+
+const githubPath = path
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/');
+
 const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${githubPath}`;
+
 
 /*
-    Load:
-    1. projects.json
-    2. agencies.json
+    Load projects.json and agencies.json.
 */
-Promise.all([
-    fetch('projects.json').then(r => {
-        if (!r.ok) throw new Error('Could not load projects.json');
-        return r.json();
-    }),
 
-    fetch('../agencies.json').then(r => {
-        if (!r.ok) throw new Error('Could not load agencies.json');
-        return r.json();
-    })
+Promise.all([
+
+    fetch(`/${path}/projects.json`)
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(
+                    `projects.json returned ${r.status}`
+                );
+            }
+            return r.json();
+        }),
+
+    fetch('/portfolio/agencies.json')
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(
+                    `agencies.json returned ${r.status}`
+                );
+            }
+            return r.json();
+        })
+
 ])
 
 .then(([projects, agencies]) => {
 
-    /* Find the agency name from agencies.json */
+    /*
+        Find the agency name.
+    */
+
     const agency = agencies.find(x =>
-        x.folder.toLowerCase() === agencyFolder.toLowerCase()
+        x.folder.toLowerCase() ===
+        agencyFolder.toLowerCase()
     );
 
     document.getElementById('agency-name').textContent =
         agency ? agency.name : agencyFolder;
 
+
     /*
         Sort projects newest first.
-        Date comes from the first 10 characters
-        of the project folder name.
     */
+
     projects.sort((a, b) =>
         b.folder.slice(0, 10).localeCompare(
             a.folder.slice(0, 10)
         )
     );
 
-    /* Find the hero image for every project */
+
+    /*
+        Find the hero image for each project.
+    */
+
     const requests = projects.map(project => {
 
+        const projectPath =
+            `${githubPath}/${encodeURIComponent(project.folder)}`;
+
         const projectAPI =
-            `${api}/${encodeURIComponent(project.folder)}`;
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${projectPath}`;
 
         return fetch(projectAPI)
+
             .then(r => {
+
                 if (!r.ok) {
                     throw new Error(
-                        `Could not load ${project.folder}`
+                        `${project.folder}: GitHub returned ${r.status}`
                     );
                 }
 
                 return r.json();
+
             })
 
             .then(files => {
@@ -178,15 +219,20 @@ Promise.all([
 
                     </section>
                 `;
+
             })
 
             .catch(error => {
+
                 console.error(error);
                 return '';
+
             });
     });
 
+
     return Promise.all(requests);
+
 })
 
 .then(cards => {
@@ -201,11 +247,12 @@ Promise.all([
     console.error(error);
 
     document.getElementById('agency').innerHTML =
-        '<p>Unable to load projects.</p>';
+        `<p>Unable to load portfolio.<br>${error.message}</p>`;
 
 });
 
 </script>
+
 
 <footer>
 
