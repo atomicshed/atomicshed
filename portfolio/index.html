@@ -19,20 +19,26 @@
 
 	<div id=agencies></div>
 	
-	<script>
-fetch('agencies.json')
+<script>
+fetch('projects.json')
     .then(r => r.json())
-    .then(a => {
-        document.getElementById('agencies').innerHTML =
-            a.map(x => `
-                <p>
-                    <a href="${x.folder}/">${x.name}</a>
-                </p>
-            `).join('');
+    .then(p => {
+        p.sort((a, b) => b.folder.slice(0, 10).localeCompare(a.folder.slice(0, 10)));
+
+        projects.innerHTML = p.map(x => {
+            const date = new Date(x.folder.slice(0, 10) + 'T12:00:00');
+
+            return `<section>
+                <h2><a href="${x.folder}/">${x.title}</a></h2>
+                <h3>${date.toLocaleDateString('en-GB', {
+                    month: 'long',
+                    year: 'numeric'
+                })} | ${x.description}</h3>
+            </section>`;
+        }).join('');
     });
 </script>
 
-	
 
 
 		<footer>
