@@ -1,101 +1,174 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="robots" content="noindex, nofollow, noarchive">
-		<title>atomicshed : John Cooper</title>
-		<link rel="stylesheet" href="/style.css">
-	</head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>atomicshed : Portfolio</title>
+    <link rel="stylesheet" href="/style.css">
 
-	<body>
+    <style>
+        .agency-name {
+            font-size:3rem;
+            line-height:1;
+            margin-bottom:50px;
+        }
 
-	<header>
-		<a href="/" class="logo">
-			<img src="/images/atomicshed.svg" alt="atomicshed">
-		</a>
-	</header>
-	
-	
+        .project-grid {
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:30px;
+            width:100%;
+        }
 
-	
-	
-<div id=project></div>
+        .project-card a {
+            display:block;
+        }
+
+        .project-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
+
+        .project-card h2 {
+            font-size:1.5rem;
+            line-height:1.1;
+            margin:10px 0 0;
+        }
+
+        .project-card h3 {
+            font-size:1rem;
+            line-height:1.2;
+            margin:5px 0 0;
+        }
+
+        .project-card a:hover img {
+            opacity:.75;
+        }
+
+        @media (max-width:900px) {
+            .project-grid {
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;
+            }
+
+            .project-card h2 {
+                font-size:1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="/" class="logo">
+        <img src="/images/atomicshed.svg" alt="atomicshed">
+    </a>
+
+</header>
+
+<h2 class="agency-name" id="agency-name"></h2>
+
+<div id="agency"></div>
 
 <script>
-const USER='atomicshed',REPO='atomicshed';
-const path=location.pathname.replace(/\/index\.html$/,'').replace(/^\/|\/$/g,'');
-const api=`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+const USER = 'atomicshed';
+const REPO = 'atomicshed';
+
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
+
+const api =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
 Promise.all([
-    fetch('project.json').then(r=>r.json()),
-    fetch(api).then(r=>r.json())
-]).then(([p,files])=>{
+    fetch('projects.json').then(r => r.json()),
+    fetch(api).then(r => r.json())
+])
+.then(([projects, files]) => {
 
-    const imgs=files
-        .filter(f=>/\.(jpe?g|png|gif|webp|svg)$/i.test(f.name))
-        .sort((a,b)=>{
+    /*
+    Agency hero image currently disabled.
 
-            const aHero=/^hero\./i.test(a.name);
-            const bHero=/^hero\./i.test(b.name);
+    const hero = files.find(f =>
+        /^hero\./i.test(f.name) &&
+        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+    );
+    */
 
-            if(aHero&&!bHero) return -1;
-            if(!aHero&&bHero) return 1;
+    const agencyName = path.split('/').pop();
 
-            return a.name.localeCompare(b.name,undefined,{
-                numeric:true,
-                sensitivity:"base"
+    document.getElementById('agency-name').textContent = agencyName;
+
+    projects.sort((a, b) =>
+        b.folder.slice(0, 10).localeCompare(
+            a.folder.slice(0, 10)
+        )
+    );
+
+    const projectPromises = projects.map(x => {
+
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
+
+        return fetch(projectAPI)
+            .then(r => r.json())
+            .then(files => {
+
+                const projectHero = files.find(f =>
+                    /^hero\./i.test(f.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                );
+
+                if (!projectHero) return '';
+
+                return `
+                    <section class="project-card">
+                        <a href="${x.folder}/">
+                            <img
+                                src="${projectHero.download_url}"
+                                alt="${x.title}"
+                            >
+                            <h2>${x.title}</h2>
+                            <h3>${x.description}</h3>
+                        </a>
+                    </section>
+                `;
             });
+    });
 
+    Promise.all(projectPromises)
+        .then(cards => {
+
+            document.getElementById('agency').innerHTML = `
+                <div class="project-grid">
+                    ${cards.join('')}
+                </div>
+            `;
         });
-
-    const hero = imgs.find(i => /^hero\./i.test(i.name));
-    const gallery = imgs.filter(i => i !== hero);
-
-    project.innerHTML=`<h1>${p.title}</h1>
-
-<h3>${p.description}</h3>
-
-${hero ? `
-
-    <img class="hero" src='${hero.name}?v=${hero.sha}' alt=''>
-` : ''}
-
-<div class=project-details>
-<div>Client</div>
-<div>${p.client}</div>
-<div>Agency</div>
-<div><a href="../">${p.agency}</a></div>
-<div>Location</div>
-<div>${p.location}</div>
-<div>Date</div>
-<div>${new Date(p.date).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</div>
-<div>Skills</div>
-<div>${p.skills.join(', ')}</div>
-</div>
-
-<div class=gallery>
-${gallery.map(i=>`<a href='${i.name}?v=${i.sha}' target=_blank>
-<img src='${i.name}?v=${i.sha}' alt=''>
-</a>`).join('')}
-</div>`;
-
 });
 </script>
 
 <footer>
 
-<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
+    <p class="footer-text">
+        &copy; <span id="year"></span> John Cooper / atomicshed
+    </p>
 
-<script>
-document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+    <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
-<p class="footer-text">
-Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
-</p>
+    <p class="footer-text">
+        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+    </p>
 
 </footer>
 
-
 </body>
+</html>
