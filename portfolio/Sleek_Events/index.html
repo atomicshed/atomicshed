@@ -92,24 +92,44 @@ Promise.all([
 ])
 .then(([projects, files]) => {
 
-    /*
-    Agency hero image currently disabled.
+   //  
+//     Agency hero image currently disabled.
+// 
+//     const hero = files.find(f =>
+//         /^hero\./i.test(f.name) &&
+//         /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+//     );
+//     */
+// 
+//     const agencyName = path.split('/').pop();
+// 
+// //  document.getElementById('agency-name').textContent = agencyName;
+// 	document.getElementById('agency-name').textContent = agency ? agency.name : agencyFolder.replace(/_/g, ' ');
+//     projects.sort((a, b) =>
+//         b.folder.slice(0, 10).localeCompare(
+//             a.folder.slice(0, 10)
+//         )
+//     );
 
-    const hero = files.find(f =>
-        /^hero\./i.test(f.name) &&
-        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-    );
-    */
+/*
+Agency hero image currently disabled.
 
-    const agencyName = path.split('/').pop();
+const hero = files.find(f =>
+    /^hero\./i.test(f.name) &&
+    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+);
+*/
 
-//     document.getElementById('agency-name').textContent = agencyName;
-	document.getElementById('agency-name').textContent = agency ? agency.name : agencyFolder.replace(/_/g, ' ');
-    projects.sort((a, b) =>
-        b.folder.slice(0, 10).localeCompare(
-            a.folder.slice(0, 10)
-        )
-    );
+const agencyName = path.split('/').pop();
+
+document.getElementById('agency-name').textContent =
+    agencyName.replace(/_/g, ' ');
+
+projects.sort((a, b) =>
+    b.folder.slice(0, 10).localeCompare(
+        a.folder.slice(0, 10)
+    )
+);
 
     const projectPromises = projects.map(x => {
 
