@@ -65,17 +65,27 @@
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-fetch('agencies.json')
-    .then(r => r.json())
+fetch('/portfolio/agencies.json')
+    .then(r => {
+        if (!r.ok) throw new Error('Could not load agencies.json');
+        return r.json();
+    })
     .then(agencies => {
 
-        agencies.forEach(x => {
+        const requests = agencies.map(x => {
 
             const api =
-                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${x.folder}`;
+                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${encodeURIComponent(x.folder)}`;
 
-            fetch(api)
-                .then(r => r.json())
+            return fetch(api)
+                .then(r => {
+                    if (!r.ok) {
+                        throw new Error(
+                            `${x.folder}: GitHub returned ${r.status}`
+                        );
+                    }
+                    return r.json();
+                })
                 .then(files => {
 
                     const hero = files.find(f =>
@@ -83,21 +93,39 @@ fetch('agencies.json')
                         /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
                     );
 
-                    if (!hero) return;
+                    if (!hero) {
+                        console.log(`No hero image found for ${x.folder}`);
+                        return '';
+                    }
 
-                    document.getElementById('agencies').insertAdjacentHTML(
-                        'beforeend',
-                        `
+                    return `
                         <section class="agency-card">
                             <a href="${x.folder}/">
-                                <img src="${hero.download_url}" alt="${x.name}">
+                                <img
+                                    src="${hero.download_url}"
+                                    alt="${x.name}"
+                                >
                                 <p>${x.name}</p>
                             </a>
                         </section>
-                        `
-                    );
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    return '';
                 });
         });
+
+        Promise.all(requests)
+            .then(cards => {
+                document.getElementById('agencies').innerHTML =
+                    cards.join('');
+            });
+    })
+    .catch(error => {
+        console.error(error);
+        document.getElementById('agencies').innerHTML =
+            '<p>Unable to load portfolio.</p>';
     });
 </script>
 
