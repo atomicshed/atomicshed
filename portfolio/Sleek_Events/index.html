@@ -103,8 +103,8 @@ Promise.all([
 
     const agencyName = path.split('/').pop();
 
-    document.getElementById('agency-name').textContent = agencyName;
-
+//     document.getElementById('agency-name').textContent = agencyName;
+	document.getElementById('agency-name').textContent = agency ? agency.name : agencyFolder.replace(/_/g, ' ');
     projects.sort((a, b) =>
         b.folder.slice(0, 10).localeCompare(
             a.folder.slice(0, 10)
