@@ -4,10 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : Client Portfolio v2</title>
+
+    <title>atomicshed : Client Portfolio v3</title>
+
     <link rel="stylesheet" href="/style.css">
 
     <style>
+
         .agency-grid {
             display:grid;
             grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -37,6 +40,7 @@
         }
 
         @media (max-width:900px) {
+
             .agency-grid {
                 grid-template-columns:repeat(2, minmax(0, 1fr));
                 gap:20px;
@@ -45,7 +49,9 @@
             .agency-card p {
                 font-size:1.2rem;
             }
+
         }
+
     </style>
 </head>
 
@@ -59,77 +65,74 @@
 
 </header>
 
+
 <div id="agencies" class="agency-grid"></div>
 
+
 <script>
+
 const USER = 'atomicshed';
 const REPO = 'atomicshed';
 
-fetch('/portfolio/agencies.json')
-    .then(r => {
-        if (!r.ok) throw new Error('Could not load agencies.json');
-        return r.json();
-    })
+
+fetch('agencies.json')
+
+    .then(r => r.json())
+
     .then(agencies => {
 
-        const requests = agencies.map(x => {
+        agencies.forEach(x => {
 
             const api =
-                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${encodeURIComponent(x.folder)}`;
+                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${x.folder}`;
 
-            return fetch(api)
-                .then(r => {
-                    if (!r.ok) {
-                        throw new Error(
-                            `${x.folder}: GitHub returned ${r.status}`
-                        );
-                    }
-                    return r.json();
-                })
-               .then(files => {
 
-    console.log('Files in', x.folder, files);
+            fetch(api)
 
-    const hero = files.find(f =>
-        /^hero\./i.test(f.name) &&
-        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-    );
+                .then(r => r.json())
 
-                    if (!hero) {
-                        console.log(`No hero image found for ${x.folder}`);
-                        return '';
-                    }
+                .then(files => {
 
-                    return `
+                    const hero = files.find(f =>
+                        /^hero\./i.test(f.name) &&
+                        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                    );
+
+
+                    if (!hero) return;
+
+
+                    document.getElementById('agencies').insertAdjacentHTML(
+
+                        'beforeend',
+
+                        `
                         <section class="agency-card">
+
                             <a href="${x.folder}/">
+
                                 <img
                                     src="${hero.download_url}"
                                     alt="${x.name}"
                                 >
+
                                 <p>${x.name}</p>
+
                             </a>
+
                         </section>
-                    `;
-                })
-                .catch(error => {
-                    console.error(error);
-                    return '';
+                        `
+
+                    );
+
                 });
+
         });
 
-        Promise.all(requests)
-            .then(cards => {
-                document.getElementById('agencies').innerHTML =
-                    cards.join('');
-            });
-    })
-    .catch(error => {
-        console.error(error);
-        document.getElementById('agencies').innerHTML =
-            '<p>Unable to load portfolio.</p>';
     });
+
 </script>
+
 
 <footer>
 
@@ -137,15 +140,21 @@ fetch('/portfolio/agencies.json')
         &copy; <span id="year"></span> John Cooper / atomicshed
     </p>
 
+
     <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
     </script>
 
+
     <p class="footer-text">
-        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+        Work shown is presented for portfolio purposes only.
+        Copyright and trademarks remain the property of the
+        respective agencies, clients and rights holders.
     </p>
 
 </footer>
+
 
 </body>
 </html>
