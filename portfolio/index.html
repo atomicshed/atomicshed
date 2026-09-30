@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
 
-    <title>atomicshed : Client Portfolio v3</title>
+    <title>atomicshed : Client Portfolio v4</title>
 
     <link rel="stylesheet" href="/style.css">
 
@@ -71,63 +71,40 @@
 
 <script>
 
-const USER = 'atomicshed';
-const REPO = 'atomicshed';
-
-
 fetch('agencies.json')
 
-    .then(r => r.json())
+    .then(response => response.json())
 
     .then(agencies => {
 
-        agencies.forEach(x => {
+        document.getElementById('agencies').innerHTML =
+            agencies.map(agency => `
 
-            const api =
-                `https://api.github.com/repos/${USER}/${REPO}/contents/portfolio/${x.folder}`;
+                <section class="agency-card">
 
+                    <a href="${agency.folder}/">
 
-            fetch(api)
+                        <img
+                            src="${agency.folder}/hero.png"
+                            alt="${agency.name}"
+                        >
 
-                .then(r => r.json())
+                        <p>${agency.name}</p>
 
-                .then(files => {
+                    </a>
 
-                    const hero = files.find(f =>
-                        /^hero\./i.test(f.name) &&
-                        /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-                    );
+                </section>
 
+            `).join('');
 
-                    if (!hero) return;
+    })
 
+    .catch(error => {
 
-                    document.getElementById('agencies').insertAdjacentHTML(
+        console.error('Could not load agencies:', error);
 
-                        'beforeend',
-
-                        `
-                        <section class="agency-card">
-
-                            <a href="${x.folder}/">
-
-                                <img
-                                    src="${hero.download_url}"
-                                    alt="${x.name}"
-                                >
-
-                                <p>${x.name}</p>
-
-                            </a>
-
-                        </section>
-                        `
-
-                    );
-
-                });
-
-        });
+        document.getElementById('agencies').innerHTML =
+            '<p>Unable to load portfolio.</p>';
 
     });
 
@@ -140,12 +117,10 @@ fetch('agencies.json')
         &copy; <span id="year"></span> John Cooper / atomicshed
     </p>
 
-
     <script>
     document.getElementById("year").textContent =
         new Date().getFullYear();
     </script>
-
 
     <p class="footer-text">
         Work shown is presented for portfolio purposes only.
