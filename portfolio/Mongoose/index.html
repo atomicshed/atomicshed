@@ -1,59 +1,176 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="robots" content="noindex, nofollow, noarchive">
-		<title>atomicshed : John Cooper</title>
-		<link rel="stylesheet" href="/style.css">
-	</head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>atomicshed : PROJECTS</title>
+    <link rel="stylesheet" href="/style.css">
 
-	<body>
+    <style>
+        .agency-name {
+            font-size:3rem;
+            line-height:1;
+            margin-bottom:50px;
+        }
 
-	<header>
-		<a href="/" class="logo">
-			<img src="/images/atomicshed.svg" alt="atomicshed">
-		</a>
-	</header>
-	
-	
+        .project-grid {
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:30px;
+            width:100%;
+        }
 
-	<p>MONGOOSE</p>
+        .project-card a {
+            display:block;
+        }
 
-	<div id=projects></div>
+        .project-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
+
+        .project-card h2 {
+            font-size:1.5rem;
+            line-height:1.1;
+            margin:10px 0 0;
+        }
+
+        .project-card h3 {
+            font-size:1rem;
+            line-height:1.2;
+            margin:5px 0 0;
+        }
+
+        .project-card a:hover img {
+            opacity:.75;
+        }
+
+        @media (max-width:900px) {
+            .project-grid {
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;
+            }
+
+            .project-card h2 {
+                font-size:1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="/" class="logo">
+        <img src="/images/atomicshed.svg" alt="atomicshed">
+    </a>
+
+</header>
+
+<h2 class="agency-name" id="agency-name"></h2>
+
+<div id="agency"></div>
 
 <script>
-fetch('projects.json')
-    .then(r => r.json())
-    .then(p => {
-        p.sort((a, b) => b.folder.slice(0, 10).localeCompare(a.folder.slice(0, 10)));
+const USER = 'atomicshed';
+const REPO = 'atomicshed';
 
-        projects.innerHTML = p.map(x => {
-            const date = new Date(x.folder.slice(0, 10) + 'T12:00:00');
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
 
-            return `<section>
-                <h2><a href="${x.folder}/">${x.title}</a></h2>
-                <h3><class="date_list">${date.toLocaleDateString('en-GB', {
-                    month: 'long',
-                    year: 'numeric'
-                })} | </class>${x.description}</h3>
-            </section>`;
-        }).join('');
+const api =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+
+Promise.all([
+    fetch('projects.json').then(r => r.json()),
+    fetch(api).then(r => r.json())
+])
+.then(([projects, files]) => {
+
+
+/*
+Agency hero image currently disabled.
+
+const hero = files.find(f =>
+    /^hero\./i.test(f.name) &&
+    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+);
+*/
+
+const agencyName = path.split('/').pop();
+
+document.getElementById('agency-name').textContent =
+    agencyName.replace(/_/g, ' ');
+
+projects.sort((a, b) =>
+    b.folder.slice(0, 10).localeCompare(
+        a.folder.slice(0, 10)
+    )
+);
+
+    const projectPromises = projects.map(x => {
+
+        const projectAPI =
+            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
+
+        return fetch(projectAPI)
+            .then(r => r.json())
+            .then(files => {
+
+                const projectHero = files.find(f =>
+                    /^hero\./i.test(f.name) &&
+                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+                );
+
+                if (!projectHero) return '';
+
+                return `
+                    <section class="project-card">
+                        <a href="${x.folder}/">
+                            <img
+                                src="${projectHero.download_url}"
+                                alt="${x.title}"
+                            >
+                            <h2>${x.title}</h2>
+                            <h3>${x.description}</h3>
+                        </a>
+                    </section>
+                `;
+            });
     });
+
+    Promise.all(projectPromises)
+        .then(cards => {
+
+            document.getElementById('agency').innerHTML = `
+                <div class="project-grid">
+                    ${cards.join('')}
+                </div>
+            `;
+        });
+});
 </script>
 
+<footer>
 
-		<footer>
-			<p class="footer-text">&copy; <span id="year"></span> John Cooper / atomicshed</p>
-	
-		<script>
-		document.getElementById("year").textContent = new Date().getFullYear();
-		</script>
-	
-			<p class="footer-text">	Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.</p>
-	
-		</footer>
+    <p class="footer-text">
+        &copy; <span id="year"></span> John Cooper / atomicshed
+    </p>
 
+    <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
-	</body>
+    <p class="footer-text">
+        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+    </p>
+
+</footer>
+
+</body>
 </html>
