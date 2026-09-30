@@ -104,8 +104,7 @@ const hero = files.find(f =>
 
 const agencyName = path.split('/').pop();
 
-document.getElementById('agency-name').textContent =
-    agencyName.replace(/_/g, ' ');
+document.getElementById('agency-name').textContent = agencyName.replace(/_/g, ' ');
 
 projects.sort((a, b) =>
     b.folder.slice(0, 10).localeCompare(
