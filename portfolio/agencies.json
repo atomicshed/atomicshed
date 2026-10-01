@@ -1,26 +1,32 @@
 [
   {
     "name": "FRESH",
-    "folder": "Fresh"
+    "folder": "Fresh",
+    "website": "https://freshwebsite.co.uk"
   },
   {
     "name": "SLEEK EVENTS",
-    "folder": "Sleek_Events"
+    "folder": "Sleek_Events",
+    "website": "https://www.sleekevents.com"
   },
   {
     "name": "MONGOOSE",
-    "folder": "Mongoose"
+    "folder": "Mongoose",
+    "website": "https://www.mongooseagency.com"
   },
   {
     "name": "BRAY LEINO EVENTS",
-    "folder": "Bray_Leino_Events"
+    "folder": "Bray_Leino_Events",
+    "website": "https://brayleinoevents.com"
   },
   {
     "name": "BRAY LEINO ",
-    "folder": "Bray_Leino"
+    "folder": "Bray_Leino",
+    "website": "https://www.brayleino.co.uk"
   },
   {
     "name": "IVORY WORLDWIDE",
-    "folder": "Ivory_Worldwide"
+    "folder": "Ivory_Worldwide",
+    "website": "https://www.ivoryworldwide.com"
   }
 ]

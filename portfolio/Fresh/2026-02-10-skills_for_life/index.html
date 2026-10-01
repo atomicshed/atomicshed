@@ -161,10 +161,10 @@
 					<a href="../">${p.agency || ''}</a>
 				</div>
 
-				<div>Location</div>
+				<div><!--Location-->&nbsp;</div>
 				<div>${p.location || ''}</div>
 
-				<div>Date</div>
+				<div><!--Date-->&nbsp;</div>
 				<div>
 					${p.date
 						? new Date(p.date).toLocaleDateString(
@@ -178,7 +178,7 @@
 					}
 				</div>
 
-				<div>Skills</div>
+				<div><!--Skills-->&nbsp;</div>
 				<div>
 					${Array.isArray(p.skills)
 						? p.skills.join(', ')
