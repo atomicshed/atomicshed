@@ -4,10 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>atomicshed : PROJECTS</title>
+
+    <title>PROJECTS : John Cooper</title>
+
     <link rel="stylesheet" href="/style.css">
 
     <style>
+
         .agency-name {
             font-size:3rem;
             line-height:1;
@@ -49,6 +52,7 @@
         }
 
         @media (max-width:900px) {
+
             .project-grid {
                 grid-template-columns:repeat(2, minmax(0, 1fr));
                 gap:20px;
@@ -57,7 +61,9 @@
             .project-card h2 {
                 font-size:1.2rem;
             }
+
         }
+
     </style>
 </head>
 
@@ -66,95 +72,121 @@
 <header>
 
     <a href="/" class="logo">
-        <img src="/images/atomicshed.svg" alt="atomicshed">
+        <img src="/images/atomicshed.svg" alt="atomicshed"> 
     </a>
 
 </header>
 
+
 <h2 class="agency-name" id="agency-name"></h2>
 
-<div id="agency"></div>
+<div id="agency" class="project-grid"></div>
+
 
 <script>
-const USER = 'atomicshed';
-const REPO = 'atomicshed';
 
 const path = location.pathname
     .replace(/\/index\.html$/, '')
     .replace(/^\/|\/$/g, '');
 
-const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
-
-Promise.all([
-    fetch('projects.json').then(r => r.json()),
-    fetch(api).then(r => r.json())
-])
-.then(([projects, files]) => {
-
 
 /*
-Agency hero image currently disabled.
-
-const hero = files.find(f =>
-    /^hero\./i.test(f.name) &&
-    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-);
+    Get agency name from the folder name.
+    Underscores become spaces.
 */
 
 const agencyName = path.split('/').pop();
 
-document.getElementById('agency-name').textContent =
+const displayAgencyName =
     agencyName.replace(/_/g, ' ');
 
-projects.sort((a, b) =>
-    b.folder.slice(0, 10).localeCompare(
-        a.folder.slice(0, 10)
-    )
-);
 
-    const projectPromises = projects.map(x => {
+document.getElementById('agency-name').textContent =
+    displayAgencyName;
 
-        const projectAPI =
-            `https://api.github.com/repos/${USER}/${REPO}/contents/${path}/${x.folder}`;
 
-        return fetch(projectAPI)
-            .then(r => r.json())
-            .then(files => {
+/*
+    Set browser/page title.
+*/
 
-                const projectHero = files.find(f =>
-                    /^hero\./i.test(f.name) &&
-                    /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-                );
+document.title =
+    `${displayAgencyName} : PROJECTS : John Cooper`;
 
-                if (!projectHero) return '';
 
-                return `
-                    <section class="project-card">
-                        <a href="${x.folder}/">
-                            <img
-                                src="${projectHero.download_url}"
-                                alt="${x.title}"
-                            >
-                            <h2>${x.title}</h2>
-                            <h3>${x.description}</h3>
-                        </a>
-                    </section>
-                `;
-            });
+/*
+    Load projects.json.
+*/
+
+fetch('projects.json')
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error('Could not load projects.json');
+        }
+
+        return response.json();
+
+    })
+
+    .then(projects => {
+
+
+        /*
+            Newest projects first.
+            Project folders begin with YYYY-MM-DD.
+        */
+
+        projects.sort((a, b) =>
+            b.folder.slice(0, 10).localeCompare(
+                a.folder.slice(0, 10)
+            )
+        );
+
+
+        /*
+            Build the project cards.
+
+            Each project is expected to contain:
+                hero.png
+        */
+
+        document.getElementById('agency').innerHTML =
+
+            projects.map(x => `
+
+                <section class="project-card">
+
+                    <a href="${x.folder}/">
+
+                        <img
+                            src="${x.folder}/hero.jpg"
+                            alt="${x.title}"
+                        >
+
+                        <h2>${x.title}</h2>
+
+                        <h3>${x.description}</h3>
+
+                    </a>
+
+                </section>
+
+            `).join('');
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById('agency').innerHTML =
+            '<p>Unable to load projects.</p>';
+
     });
 
-    Promise.all(projectPromises)
-        .then(cards => {
-
-            document.getElementById('agency').innerHTML = `
-                <div class="project-grid">
-                    ${cards.join('')}
-                </div>
-            `;
-        });
-});
 </script>
+
 
 <footer>
 
@@ -162,15 +194,21 @@ projects.sort((a, b) =>
         &copy; <span id="year"></span> John Cooper / atomicshed
     </p>
 
+
     <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
     </script>
 
+
     <p class="footer-text">
-        Work shown is presented for portfolio purposes only. Copyright and trademarks remain the property of the respective agencies, clients and rights holders.
+        Work shown is presented for portfolio purposes only.
+        Copyright and trademarks remain the property of the
+        respective agencies, clients and rights holders.
     </p>
 
 </footer>
+
 
 </body>
 </html>
