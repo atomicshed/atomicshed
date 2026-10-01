@@ -5,12 +5,15 @@
 	"description":"Conference presentation design template."
 }
 ,
-
 {
 	"title":"DfE Apprenticeship Awards",
 	"folder":"2025-12-03-apprenticeship_awards",
 	"description":"Awards presentation design."
 }
-
-
+,
+{
+	"title":"Other Projects",
+	"folder":"2024-01-01-other",
+	"description":"Other projects."
+}
 ]
