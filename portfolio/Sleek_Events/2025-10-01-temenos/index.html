@@ -1,343 +1,332 @@
 <!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex, nofollow, noarchive">
+		<title>atomicshed : John Cooper</title>
+		<link rel="stylesheet" href="/style.css">
+
+		<style>
+
+		.hero {
+			display:block;
+			width:auto;
+			height:auto;
+			max-width:min(100%, 900px);
+			max-height:70vh;
+			margin:0 0 60px;
+		}
+
+		.project-details {
+			display:grid;
+			grid-template-columns:180px 1fr;
+			gap:8px 20px;
+			max-width:780px;
+			margin-bottom:60px;
+		}
+
+		.gallery {
+			display:grid;
+			grid-template-columns:repeat(4, minmax(0, 1fr));
+			gap:30px;
+			width:100%;
+		}
+
+		.gallery a {
+			display:block;
+		}
+
+		.gallery img {
+			display:block;
+			width:100%;
+			aspect-ratio:16 / 9;
+			object-fit:cover;
+		}
+
+		.project-card h2 {
+			font-size:1.5rem;
+			line-height:1.1;
+			margin:10px 0 0;
+		}
+
+		.gallery a:hover img {
+			opacity:.75;
+		}
+
+		.agency-link {
+			display:inline-block;
+			margin-right:15px;
+		}
+
+		.other-projects {
+			display:inline-block;
+			background:#fff;
+			padding:1px 5px;
+		}
+
+		.other-projects:hover {
+			background:#000;
+			color:#fff;
+		}
+
+		@media (max-width:900px) {
+
+			.project-details {
+				grid-template-columns:120px 1fr;
+			}
+
+			.gallery {
+				grid-template-columns:repeat(2, minmax(0, 1fr));
+				gap:20px;
+			}
 
-<head>
+			.project-card h2 {
+				font-size:1.2rem;
+			}
 
-    <meta charset="utf-8">
+		}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+		</style>
+	</head>
+
+	<body>
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+	<header>
+		<a href="/" class="logo">
+			<img src="/images/atomicshed.svg" alt="atomicshed">
+		</a>
+	</header>
+	
+	
+	<div id="project"></div>
+		
+	<script>
 
-    <title>PROJECT : John Cooper</title>
+	const USER = 'atomicshed';
+	const REPO = 'atomicshed';
 
-    <link rel="stylesheet" href="/style.css">
+	const path = location.pathname
+		.replace(/\/index\.html$/, '')
+		.replace(/^\/|\/$/g, '');
 
-    <style>
+	const api =
+		`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
-        .hero {
-            display:block;
-            width:auto;
-            height:auto;
-            max-width:min(100%, 900px);
-            max-height:70vh;
-            margin:0 0 60px;
-        }
+	Promise.all([
 
-        .project-details {
-            display:grid;
-            grid-template-columns:180px 1fr;
-            gap:8px 20px;
-            max-width:780px;
-            margin-bottom:60px;
-        }
+		fetch('project.json')
+			.then(r => r.json()),
 
-        .gallery {
-            display:grid;
-            grid-template-columns:repeat(3, minmax(0, 1fr));
-            gap:30px;
-        }
+		fetch(api)
+			.then(r => r.json()),
 
-        .gallery a {
-            display:block;
-        }
+		fetch('/portfolio/agencies.json')
+			.then(r => r.json())
 
-        .gallery img {
-            display:block;
-            width:100%;
-            height:auto;
-        }
+	])
+	.then(([p, files, agencies]) => {
 
-        .gallery a:hover img {
-            opacity:.75;
-        }
+		const imgs = files
+			.filter(f =>
+				/\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
+			)
+			.sort((a, b) => {
 
-        @media (max-width:900px) {
+				const aHero = /^hero\./i.test(a.name);
+				const bHero = /^hero\./i.test(b.name);
 
-            .project-details {
-                grid-template-columns:120px 1fr;
-            }
+				if (aHero && !bHero) return -1;
+				if (!aHero && bHero) return 1;
 
-            .gallery {
-                grid-template-columns:repeat(2, minmax(0, 1fr));
-                gap:20px;
-            }
+				return a.name.localeCompare(
+					b.name,
+					undefined,
+					{
+						numeric:true,
+						sensitivity:"base"
+					}
+				);
 
-        }
+			});
 
-    </style>
+		const hero =
+			imgs.find(i => /^hero\./i.test(i.name));
 
-</head>
+		const gallery =
+			imgs.filter(i => i !== hero);
 
 
-<body>
+		/* Find the agency in agencies.json */
 
+		const agency =
+			agencies.find(a =>
+				a.name.toLowerCase() ===
+				(p.agency || '').toLowerCase()
+			);
 
-<header>
 
-    <a href="/" class="logo">
-        <img src="/images/atomicshed.svg" alt="atomicshed">
-    </a>
+		const agencyWebsite =
+			agency && agency.website
+				? agency.website
+				: null;
 
-</header>
 
+		document.title =
+			`${p.agency || ''} : ${p.title || ''} : John Cooper atomicshed`;
 
-<div id="project"></div>
 
+		document.getElementById('project').innerHTML = `
 
-<script>
+			<h1>${p.title}</h1>
 
-const USER = 'atomicshed';
-const REPO = 'atomicshed';
+			<h3>${p.description}</h3>
 
+			${hero ? `
 
-/*
-    Get the current project folder.
+				<img
+					class="hero"
+					src="${hero.name}?v=${hero.sha}"
+					alt=""
+				>
 
-    Example:
+			` : ''}
 
-    /portfolio/Sleek_Events/2025-10-01-temenos/
 
-    becomes:
+			<div class="project-details">
 
-    portfolio/Sleek_Events/2025-10-01-temenos
-*/
+				<div>Client</div>
+				<div>${p.client || ''}</div>
 
-const path = location.pathname
-    .replace(/\/index\.html$/, '')
-    .replace(/^\/|\/$/g, '');
 
+				<div>Agency</div>
 
-/*
-    GitHub API location for this project.
-*/
+				<div>
 
-const api =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
+					${agencyWebsite ? `
+						<a
+							class="agency-link"
+							href="${agencyWebsite}"
+							target="_blank"
+							rel="noopener"
+						>
+							${p.agency || ''}
+						</a>
+					` : `
+						${p.agency || ''}
+					`}
 
+					<a
+						class="other-projects"
+						href="../"
+					>
+						Other projects
+					</a>
 
-/*
-    Load project information and the project folder contents.
-*/
+				</div>
 
-Promise.all([
 
-    fetch('project.json')
-        .then(r => {
+				<div><!--Location-->&nbsp;</div>
 
-            if (!r.ok) {
-                throw new Error('Could not load project.json');
-            }
+				<div>
+					${p.location || ''}
+				</div>
 
-            return r.json();
 
-        }),
+				<div><!--Date-->&nbsp;</div>
 
-    fetch(api)
-        .then(r => {
+				<div>
+					${p.date
+						? new Date(p.date).toLocaleDateString(
+							'en-GB',
+							{
+								month:'long',
+								year:'numeric'
+							}
+						)
+						: ''
+					}
+				</div>
 
-            if (!r.ok) {
-                throw new Error(
-                    `Could not load project folder (${r.status})`
-                );
-            }
 
-            return r.json();
+				<div><!--Skills-->&nbsp;</div>
 
-        })
+				<div>
+					${Array.isArray(p.skills)
+						? p.skills.join(', ')
+						: ''
+					}
+				</div>
 
-])
+			</div>
 
 
-.then(([p, files]) => {
+			<div class="gallery">
 
+				${gallery.map(i => {
 
-    /*
-        Find all images.
-    */
+					const displayName = i.name
+						.replace(/^[^-]*-/, '')
+						.replace(/\.[^.]+$/, '')
+						.replace(/_/g, ' ');
 
-    const imgs = files
+					return `
 
-        .filter(f =>
-            /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name)
-        )
+						<section class="project-card">
 
-        .sort((a, b) => {
+							<a
+								href="${i.name}?v=${i.sha}"
+								target="_blank"
+							>
 
-            /*
-                Always put hero first.
-            */
+								<img
+									src="${i.name}?v=${i.sha}"
+									alt="${displayName}"
+								>
 
-            const aHero = /^hero\./i.test(a.name);
-            const bHero = /^hero\./i.test(b.name);
+								<h2>${displayName}</h2>
 
-            if (aHero && !bHero) return -1;
-            if (!aHero && bHero) return 1;
+							</a>
 
-            /*
-                Natural numerical sorting.
+						</section>
 
-                01.jpg
-                02.jpg
-                10.jpg
-            */
+					`;
 
-            return a.name.localeCompare(
-                b.name,
-                undefined,
-                {
-                    numeric:true,
-                    sensitivity:'base'
-                }
-            );
+				}).join('')}
 
-        });
+			</div>
+		`;
 
+	})
+	.catch(error => {
 
-    const hero =
-        imgs.find(i => /^hero\./i.test(i.name));
+		console.error(error);
 
+		document.getElementById('project').innerHTML =
+			'<p>Unable to load project.</p>';
 
-    const gallery =
-        imgs.filter(i => i !== hero);
+	});
 
+	</script>
+		
+	<footer>
+		
+		<p class="footer-text">
+			&copy; <span id="year"></span> John Cooper / atomicshed
+		</p>
+		
+		<script>
+			document.getElementById("year").textContent =
+				new Date().getFullYear();
+		</script>
+		
+		<p class="footer-text">
+			Work shown is presented for portfolio purposes only.
+			Copyright and trademarks remain the property of the
+			respective agencies, clients and rights holders.
+		</p>
+		
+	</footer>
 
-    /*
-        Set browser title.
-    */
-
-    document.title =
-        `${p.title} : ${p.client || ''} : John Cooper`;
-
-
-    /*
-        Display project.
-    */
-
-    document.getElementById('project').innerHTML = `
-
-        <h1>${p.title}</h1>
-
-        <h3>${p.description}</h3>
-
-
-        ${hero ? `
-
-            <img
-                class="hero"
-                src="${hero.name}?v=${hero.sha}"
-                alt=""
-            >
-
-        ` : ''}
-
-
-        <div class="project-details">
-
-            <div>Client</div>
-            <div>${p.client || ''}</div>
-
-            <div>Agency</div>
-            <div>
-                <a href="../">${p.agency || ''}</a>
-            </div>
-
-            <div>Location</div>
-            <div>${p.location || ''}</div>
-
-            <div>Date</div>
-            <div>
-                ${p.date
-                    ? new Date(p.date).toLocaleDateString(
-                        'en-GB',
-                        {
-                            month:'long',
-                            year:'numeric'
-                        }
-                    )
-                    : ''
-                }
-            </div>
-
-            <div>Skills</div>
-            <div>
-                ${Array.isArray(p.skills)
-                    ? p.skills.join(', ')
-                    : ''
-                }
-            </div>
-
-        </div>
-
-
-        <div class="gallery">
-
-            ${gallery.map(i => `
-
-                <a
-                    href="${i.name}?v=${i.sha}"
-                    target="_blank"
-                >
-
-                    <img
-                        src="${i.name}?v=${i.sha}"
-                        alt=""
-                    >
-
-                </a>
-
-            `).join('')}
-
-        </div>
-
-    `;
-
-})
-
-
-.catch(error => {
-
-    console.error(error);
-
-    document.getElementById('project').innerHTML = `
-
-        <p>
-            Unable to load project.
-        </p>
-
-    `;
-
-});
-
-</script>
-
-
-<footer>
-
-    <p class="footer-text">
-        &copy;
-        <span id="year"></span>
-        John Cooper / atomicshed
-    </p>
-
-
-    <script>
-
-    document.getElementById("year").textContent =
-        new Date().getFullYear();
-
-    </script>
-
-
-    <p class="footer-text">
-        Work shown is presented for portfolio purposes only.
-        Copyright and trademarks remain the property of the
-        respective agencies, clients and rights holders.
-    </p>
-
-</footer>
-
-
-</body>
-
+	</body>
 </html>
