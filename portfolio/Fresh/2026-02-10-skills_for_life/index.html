@@ -54,6 +54,22 @@
 			opacity:.75;
 		}
 
+		.agency-link {
+			display:inline-block;
+			margin-right:15px;
+		}
+
+		.other-projects {
+			display:inline-block;
+			background:#fff;
+			padding:1px 5px;
+		}
+
+		.other-projects:hover {
+			background:#000;
+			color:#fff;
+		}
+
 		@media (max-width:900px) {
 
 			.project-details {
@@ -98,10 +114,18 @@
 		`https://api.github.com/repos/${USER}/${REPO}/contents/${path}`;
 
 	Promise.all([
-		fetch('project.json').then(r => r.json()),
-		fetch(api).then(r => r.json())
+
+		fetch('project.json')
+			.then(r => r.json()),
+
+		fetch(api)
+			.then(r => r.json()),
+
+		fetch('/portfolio/agencies.json')
+			.then(r => r.json())
+
 	])
-	.then(([p, files]) => {
+	.then(([p, files, agencies]) => {
 
 		const imgs = files
 			.filter(f =>
@@ -132,8 +156,25 @@
 		const gallery =
 			imgs.filter(i => i !== hero);
 
+
+		/* Find the agency in agencies.json */
+
+		const agency =
+			agencies.find(a =>
+				a.name.toLowerCase() ===
+				(p.agency || '').toLowerCase()
+			);
+
+
+		const agencyWebsite =
+			agency && agency.website
+				? agency.website
+				: null;
+
+
 		document.title =
 			`${p.agency || ''} : ${p.title || ''} : John Cooper atomicshed`;
+
 
 		document.getElementById('project').innerHTML = `
 
@@ -151,20 +192,49 @@
 
 			` : ''}
 
+
 			<div class="project-details">
 
 				<div>Client</div>
 				<div>${p.client || ''}</div>
 
+
 				<div>Agency</div>
+
 				<div>
-					<a href="../">${p.agency || ''}</a>
+
+					${agencyWebsite ? `
+						<a
+							class="agency-link"
+							href="${agencyWebsite}"
+							target="_blank"
+							rel="noopener"
+						>
+							${p.agency || ''}
+						</a>
+					` : `
+						${p.agency || ''}
+					`}
+
+					<a
+						class="other-projects"
+						href="../"
+					>
+						Other projects
+					</a>
+
 				</div>
 
+
 				<div><!--Location-->&nbsp;</div>
-				<div>${p.location || ''}</div>
+
+				<div>
+					${p.location || ''}
+				</div>
+
 
 				<div><!--Date-->&nbsp;</div>
+
 				<div>
 					${p.date
 						? new Date(p.date).toLocaleDateString(
@@ -178,7 +248,9 @@
 					}
 				</div>
 
+
 				<div><!--Skills-->&nbsp;</div>
+
 				<div>
 					${Array.isArray(p.skills)
 						? p.skills.join(', ')
@@ -187,6 +259,7 @@
 				</div>
 
 			</div>
+
 
 			<div class="gallery">
 
