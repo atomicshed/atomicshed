@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+
+    <title>PROJECTS : John Cooper</title>
+
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+
+        .agency-name {
+            font-size:3rem;
+            line-height:1;
+            margin-bottom:50px;
+        }
+
+        .project-grid {
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:30px;
+            width:100%;
+        }
+
+        .project-card a {
+            display:block;
+        }
+
+        .project-card img {
+            display:block;
+            width:100%;
+            aspect-ratio:16 / 9;
+            object-fit:cover;
+        }
+
+        .project-card h2 {
+            font-size:1.5rem;
+            line-height:1.1;
+            margin:10px 0 0;
+        }
+
+        .project-card h3 {
+            font-size:1rem;
+            line-height:1.2;
+            margin:5px 0 0;
+        }
+
+        .project-card a:hover img {
+            opacity:.75;
+        }
+
+        @media (max-width:900px) {
+
+            .project-grid {
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;
+            }
+
+            .project-card h2 {
+                font-size:1.2rem;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<header>
+
+    <a href="/" class="logo">
+        <img
+            src="/images/atomicshed.svg"
+            alt="atomicshed"
+        >
+    </a>
+
+</header>
+
+
+<h2
+    class="agency-name"
+    id="agency-name">
+</h2>
+
+
+<div
+    id="agency"
+    class="project-grid">
+</div>
+
+
+<script>
+
+const path = location.pathname
+    .replace(/\/index\.html$/, '')
+    .replace(/^\/|\/$/g, '');
+
+
+/*
+    Get the agency folder name.
+
+    Example:
+    /portfolio/Sleek_Events/
+    becomes:
+    Sleek_Events
+*/
+
+const agencyName =
+    path.split('/').pop();
+
+
+/*
+    Turn underscores into spaces
+*/
+
+const displayAgencyName =
+    agencyName.replace(/_/g, ' ');
+
+
+/*
+    Display agency name
+*/
+
+document.getElementById('agency-name').textContent =
+    displayAgencyName;
+
+
+/*
+    Set browser title
+*/
+
+document.title =
+    `${displayAgencyName} : PROJECTS : John Cooper`;
+
+
+/*
+    Load projects
+*/
+
+fetch('projects.json')
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error('Could not load projects.json');
+        }
+
+        return response.json();
+
+    })
+
+    .then(projects => {
+
+
+        /*
+            Newest projects first.
+
+            The date is taken from the first
+            10 characters of the folder name.
+
+            Example:
+            2025-10-07-xero-uk-roadshow
+        */
+
+        projects.sort((a, b) =>
+            b.folder.slice(0, 10).localeCompare(
+                a.folder.slice(0, 10)
+            )
+        );
+
+
+        /*
+            Create project cards
+        */
+
+        document.getElementById('agency').innerHTML =
+
+            projects.map(project => `
+
+                <section class="project-card">
+
+                    <a href="${project.folder}/">
+
+                        <img
+                            src="${project.folder}/hero.png"
+                            alt="${project.title}"
+                        >
+
+                        <h2>
+                            ${project.title}
+                        </h2>
+
+                        <h3>
+                            ${project.description || ''}
+                        </h3>
+
+                    </a>
+
+                </section>
+
+            `).join('');
+
+    })
+
+
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById('agency').innerHTML =
+            '<p>Unable to load projects.</p>';
+
+    });
+
+</script>
+
+
+<footer>
+
+    <p class="footer-text">
+        &copy;
+        <span id="year"></span>
+        John Cooper / atomicshed
+    </p>
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+
+    <p class="footer-text">
+        Work shown is presented for portfolio purposes only.
+        Copyright and trademarks remain the property of the
+        respective agencies, clients and rights holders.
+    </p>
+
+</footer>
+
+
+</body>
+</html>
